@@ -1,0 +1,23 @@
+{
+    "name": "abdounikarim/blog",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/",
+            "Framework\\": "Framework"
+        }
+    },
+    "authors": [
+        {
+            "name": "abdounikarim",
+            "email": "abdounikarim@gmail.com"
+        }
+    ],
+    "require": {
+        "twig/twig": "^3.5"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.10",
+        "friendsofphp/php-cs-fixer": "^3.14",
+        "vincentlanglet/twig-cs-fixer": "^1.0"
+    }
+}

@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Hello from the admin</h1>
+
+    <div class="col-12">
+        {% for article in articles %}
+            <h2>
+                <a href="{{ path('show_article', {
+                    slug: article.slug
+                }) }}">
+                    {{ article.title }}
+                </a>
+            </h2>
+            <p>{{ article.content }}...</p>
+            {{ include('_inc/_articles_actions.html.twig', {
+                article: article
+            }) }}
+            <hr>
+        {% endfor %}
+    </div>
+{% endblock %}
