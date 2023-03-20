@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Framework\Routing;
 
+use Framework\HttpFoundation\ErrorResponse;
 use Framework\HttpFoundation\Request;
 
-class Router
+final class Router implements RouterInterface
 {
     public string $currentRequestUri = '';
     private ?Route $currentRoute = null;
@@ -44,12 +45,6 @@ class Router
         // Push the current route arguments into the Request object
         foreach ($this->currentRoute->getArguments() as $key => $value) {
             $request->query->set($key, $value);
-        }
-
-        // TODO - is this really needed ?
-        // it just lower case every server key
-        foreach ($request->server->all() as $key => $value) {
-            $request->server->set(strtolower($key), $value);
         }
 
         return $this->currentRoute;

@@ -11,9 +11,11 @@ final class RouteCollection
      */
     private array $routes = [];
 
-    public function add(Route $route): void
+    public function add(Route $route): self
     {
         $this->routes[] = $route;
+
+        return $this;
     }
 
     /**

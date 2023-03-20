@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Form\ArticleType;
+use App\Model\Article;
 use Framework\Core\AbstractController;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
@@ -12,18 +14,19 @@ final class BackController extends AbstractController
 {
     public function admin(): Response
     {
+        /*
+        $articles = $this->articleRepository->findAll();
+        */
         $articles = [
             [
                 'title' => 'foo title',
                 'content' => 'foo content',
-                // TODO - replace this by a slugger
-                'slug' => 'foo-title',
+                'slug' => $this->getSlug()->slug('foo title'),
             ],
             [
                 'title' => 'bar title',
                 'content' => 'bar content',
-                // TODO - replace this by a slugger
-                'slug' => 'bar-title',
+                'slug' => $this->getSlug()->slug('bar title'),
             ],
         ];
 
@@ -34,12 +37,19 @@ final class BackController extends AbstractController
 
     public function newArticle(Request $request): Response
     {
-        var_dump($request->request->get('title'));
-        // $form = $this->createForm(ArticleType::class);
-        // $form->handleRequest($request);
+        $form = $this->createForm(new ArticleType(), new Article());
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // TODO - handle get data
+            var_dump($form->getData());
+            $this->addFlash('article_success', 'Le nouvel article a été créé');
+
+            return $this->redirectToRoute('admin');
+        }
 
         return $this->render('back/new.html.twig', [
-            'article' => 'a new article',
+            'form' => $form,
         ]);
     }
 
@@ -66,7 +76,14 @@ final class BackController extends AbstractController
 
     public function deleteArticle(Request $request): Response
     {
-        // TODO - replace this with a redirectToRoute method
-        return new Response('article deleted');
+        // TODO - check if the article exists in database based on slug ?
+        /*
+        if (!$article) {
+            throw new \Exception('There is no article with this slug');
+        }
+        */
+        $this->addFlash('article_deleted', 'L\'article a bien été supprimé');
+
+        return $this->redirectToRoute('admin');
     }
 }
