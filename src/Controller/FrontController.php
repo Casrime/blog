@@ -22,15 +22,13 @@ final class FrontController extends AbstractController
         $articles = [
             [
                 'title' => 'foo title',
-                'updatedAt' => '2023-09-16',
-                'chapo' => 'foo chapo',
+                'content' => 'foo content',
                 // TODO - replace this by a slugger
                 'slug' => 'foo-title',
             ],
             [
                 'title' => 'bar title',
-                'updatedAt' => '2023-09-01',
-                'chapo' => 'bar chapo',
+                'content' => 'bar content',
                 // TODO - replace this by a slugger
                 'slug' => 'bar-title',
             ],
@@ -47,11 +45,27 @@ final class FrontController extends AbstractController
         $article = [
             // TODO - replace this
             'title' => str_replace('-', ' ', $slug),
+            'chapo' => 'chapo',
+            'content' => 'lorem ipsum dolor content',
+            'author' => 'author',
+            'updatedAt' => '2023-09-16',
             'slug' => $slug,
+        ];
+
+        $comments = [
+            [
+                'comment' => 'comment one',
+                'validated' => true,
+            ],
+            [
+                'comment' => 'comment two',
+                'validated' => true,
+            ],
         ];
 
         return $this->render('front/article.html.twig', [
             'article' => $article,
+            'comments' => $comments,
         ]);
     }
 
