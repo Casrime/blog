@@ -1,5 +1,29 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Hello from the blog 🗒</h1>
+    {# TODO - replace these values #}
+    <h1>NOM Prénom</h1>
+    <img src="https://cdn.pixabay.com/photo/2016/10/02/19/51/lion-1710301_1280.png" alt="Mon logo" id="logo">
+
+    <h2>Lorem ipsum dolor sit amet</h2>
+
+    {# TODO - replace this form #}
+    <form>
+        <label for="lastname">Nom</label>
+        <input type="text" id="lastname">
+        <label for="firstname">Prénom</label>
+        <input type="text" id="firstname">
+        <label for="email">Email</label>
+        <input type="email" id="email">
+        <label for="message">Message</label>
+        <textarea id="message"></textarea>
+        <input type="submit" value="Envoyer">
+    </form>
+
+    {# TODO - replace these links #}
+    <a href="https://canva.com" target="_blank">Mon CV</a>
+
+    <a href="https://github.com" target="_blank">GitHub</a>
+    <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+    <a href="https://twitter.com" target="_blank">Twitter</a>
 {% endblock %}
