@@ -22,13 +22,15 @@ final class FrontController extends AbstractController
         $articles = [
             [
                 'title' => 'foo title',
-                'content' => 'foo content',
+                'updatedAt' => '2023-09-16',
+                'chapo' => 'foo chapo',
                 // TODO - replace this by a slugger
                 'slug' => 'foo-title',
             ],
             [
                 'title' => 'bar title',
-                'content' => 'bar content',
+                'updatedAt' => '2023-09-01',
+                'chapo' => 'bar chapo',
                 // TODO - replace this by a slugger
                 'slug' => 'bar-title',
             ],

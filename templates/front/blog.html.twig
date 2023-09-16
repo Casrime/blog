@@ -12,7 +12,8 @@
                     {{ article.title }}
                 </a>
             </h2>
-            <p>{{ article.content }}...</p>
+            <p><i>Modifié le : {{ article.updatedAt }}</i></p>
+            <p>{{ article.chapo }}...</p>
             {{ include('_inc/_articles_actions.html.twig', {
                 article: article
             }) }}
