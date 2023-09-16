@@ -45,11 +45,27 @@ final class FrontController extends AbstractController
         $article = [
             // TODO - replace this
             'title' => str_replace('-', ' ', $slug),
+            'chapo' => 'chapo',
+            'content' => 'lorem ipsum dolor content',
+            'author' => 'author',
+            'updatedAt' => '2023-09-16',
             'slug' => $slug,
+        ];
+
+        $comments = [
+            [
+                'comment' => 'comment one',
+                'validated' => true,
+            ],
+            [
+                'comment' => 'comment two',
+                'validated' => true,
+            ],
         ];
 
         return $this->render('front/article.html.twig', [
             'article' => $article,
+            'comments' => $comments,
         ]);
     }
 

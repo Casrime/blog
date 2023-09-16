@@ -2,4 +2,29 @@
 
 {% block body %}
     <h1>Hello {{ article.title }}</h1>
+
+    <p>Chapo : {{ article.chapo }}</p>
+    <p>Contenu : {{ article.content }}</p>
+    <p>Auteur : {{ article.author }}</p>
+    <p>Mis à jour le : {{ article.updatedAt }}</p>
+
+    <form>
+        <label for="comment">Ajouter un commentaire</label>
+        <textarea id="comment"></textarea>
+        <input type="submit" value="Valider">
+    </form>
+
+    <br><br>
+    <br><br>
+    <br><br>
+
+    <div id="comments">
+        <h2>Commentaires</h2>
+        {% for comment in comments %}
+            <div class="comment">
+                {{ comment.comment }}
+                <hr>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
