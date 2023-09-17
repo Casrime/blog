@@ -13,6 +13,7 @@ $routeCollection->add(new Route('/admin', 'admin', [BackController::class, 'admi
 $routeCollection->add(new Route('/admin/article/new', 'new_article', [BackController::class, 'newArticle'], ['GET', 'POST']));
 $routeCollection->add(new Route('/admin/article/edit/{slug}', 'edit_article', [BackController::class, 'editArticle'], ['GET', 'POST']));
 $routeCollection->add(new Route('/admin/article/delete/{slug}', 'delete_article', [BackController::class, 'deleteArticle'], ['GET', 'DELETE']));
+$routeCollection->add(new Route('/admin/home', 'admin_home', [BackController::class, 'adminHome'], ['GET', 'POST']));
 $routeCollection->add(new Route('/register', 'register', [FrontController::class, 'register'], ['GET']));
 $routeCollection->add(new Route('/login', 'login', [FrontController::class, 'login'], ['GET']));
 

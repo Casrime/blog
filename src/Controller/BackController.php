@@ -76,4 +76,21 @@ final class BackController extends AbstractController
         // TODO - replace this with a redirectToRoute method
         return new Response('article deleted');
     }
+
+    public function adminHome(): Response
+    {
+        $data = [
+            'lastname' => 'nom',
+            'firstname' => 'prénom',
+            'image' => 'https://cdn.pixabay.com/photo/2016/10/02/19/51/lion-1710301_1280.png',
+            'chapo' => '',
+            'cv' => '',
+            'github' => '',
+            'linkedin' => '',
+            'twitter' => '',
+        ];
+        return $this->render('back/home.html.twig', [
+            'data' => $data,
+        ]);
+    }
 }

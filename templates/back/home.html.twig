@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Admin home</h1>
+
+    {# TODO - replace values by this #}
+    {# {{ form(form) }} #}
+
+    <form>
+        <label>Lastname</label>
+        <input type="text" value="{{ data.lastname }}">
+        <label>Firstname</label>
+        <input type="text" value="{{ data.firstname }}">
+        <label>Image</label>
+        <input type="text" value="{{ data.image }}">
+        <label>Chapo</label>
+        <input type="text" value="{{ data.chapo }}">
+        <label>CV</label>
+        <input type="text" value="{{ data.cv }}">
+        <label>GitHub</label>
+        <input type="url" value="{{ data.github }}">
+        <label>LinkedIn</label>
+        <input type="url" value="{{ data.linkedin }}">
+        <label>Twitter</label>
+        <input type="url" value="{{ data.twitter }}">
+        <input type="submit" value="Valider">
+    </form>
+{% endblock %}
