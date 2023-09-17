@@ -35,4 +35,13 @@ class Parameter implements ParameterInterface
     {
         return $this->parameters;
     }
+
+    public function getString(string $key): string
+    {
+        if (is_string($this->parameters[$key])) {
+            return $this->parameters[$key];
+        }
+
+        return '';
+    }
 }

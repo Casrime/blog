@@ -41,9 +41,9 @@ final class FrontController extends AbstractController
 
     public function article(Request $request): Response
     {
-        $slug = $request->query->get('slug');
+        $slug = $request->query->getString('slug');
         $article = [
-            // TODO - replace this
+            // TODO - replace this by using Slugger
             'title' => str_replace('-', ' ', $slug),
             'chapo' => 'chapo',
             'content' => 'lorem ipsum dolor content',

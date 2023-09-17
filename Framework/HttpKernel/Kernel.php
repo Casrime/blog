@@ -29,7 +29,7 @@ final class Kernel implements KernelInterface
         }
     }
 
-    private function handleRaw(Request $request)
+    private function handleRaw(Request $request): Response
     {
         $currentRoute = $this->router->match($request);
 

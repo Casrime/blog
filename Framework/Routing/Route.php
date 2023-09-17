@@ -10,7 +10,7 @@ class Route
         private string $path,
         private string $name,
         /**
-         * @var array<string, string>
+         * @var array<int, string>
          */
         private array $controller,
         /**
@@ -45,7 +45,7 @@ class Route
     }
 
     /**
-     * @return array<string, string>
+     * @return array<int, string>
      */
     public function getController(): array
     {
@@ -84,8 +84,9 @@ class Route
         $this->arguments = $arguments;
     }
 
-    public function hasArgument()
+    public function hasArgument(string $name): bool
     {
+        return array_key_exists($name, $this->arguments);
     }
 
     public function getArgument(string $name): ?string
@@ -124,28 +125,27 @@ class Route
     public function removeSpecialChars(string $parameter): string
     {
         // TODO - handle other chars ? (show generate method if needed)
-        return preg_replace('#/|{|}#', '', $parameter);
+        return (string) preg_replace('#/|{|}#', '', $parameter);
     }
 
     public function generate(string $string): string
     {
-        $string = preg_replace('/\s+/', '-', mb_strtolower(trim(strip_tags($string)), 'UTF-8'));
-        $string = preg_replace('#à|á|â|ã|ä|å#', 'a', $string);
-        $string = preg_replace('#ç#', 'c', $string);
-        $string = preg_replace('#è|é|ê|ë#', 'e', $string);
-        $string = preg_replace('#ì|í|î|ï#', 'i', $string);
-        $string = preg_replace('#ð|ò|ó|ô|õ|ö#', 'o', $string);
-        $string = preg_replace('#ù|ú|û|ü#', 'u', $string);
-        $string = preg_replace('#ý|ÿ#', 'y', $string);
-        $string = preg_replace('#|_|:|,|\'|"#', '', $string);
+        $string = (string) preg_replace('/\s+/', '-', mb_strtolower(trim(strip_tags($string)), 'UTF-8'));
+        $string = (string) preg_replace('#à|á|â|ã|ä|å#', 'a', $string);
+        $string = (string) preg_replace('#ç#', 'c', $string);
+        $string = (string) preg_replace('#è|é|ê|ë#', 'e', $string);
+        $string = (string) preg_replace('#ì|í|î|ï#', 'i', $string);
+        $string = (string) preg_replace('#ð|ò|ó|ô|õ|ö#', 'o', $string);
+        $string = (string) preg_replace('#ù|ú|û|ü#', 'u', $string);
+        $string = (string) preg_replace('#ý|ÿ#', 'y', $string);
 
-        return $string;
+        return (string) preg_replace('#|_|:|,|\'|"#', '', $string);
     }
 
     public function updatePath(): void
     {
         foreach ($this->getArguments() as $key => $argument) {
-            $this->setPath(preg_replace('#/{'.$key.'}#', $argument, $this->getPath()));
+            $this->setPath((string) preg_replace('#/{'.$key.'}#', $argument, $this->getPath()));
         }
     }
 }

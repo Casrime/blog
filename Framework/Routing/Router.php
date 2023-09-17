@@ -85,6 +85,9 @@ class Router
         }
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function matchRegex(Route $route): array
     {
         preg_match('/\/{[a-zA-Z0-9-_]*}/', $route->getPath(), $matches);

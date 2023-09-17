@@ -24,7 +24,7 @@ class Request
      * Provides server value in lowercase, like request_uri
      * THis will return REQUEST_URI
      */
-    public function getDataFromServer(string $value): mixed
+    public function getDataFromServer(string $value): string
     {
         if (!$this->server->has(strtoupper($value))) {
             // TODO - Create Server Exception
