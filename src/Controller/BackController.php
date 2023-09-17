@@ -58,8 +58,15 @@ final class BackController extends AbstractController
         */
         // TODO - if not, send an exception
 
+        $article = [
+            'title' => 'title',
+            'chapo' => 'chapo',
+            'author' => 'author',
+            'content' => 'content',
+        ];
+
         return $this->render('back/edit.html.twig', [
-            // 'article' => $article,
+            'article' => $article,
             'slug' => $slug,
         ]);
     }
