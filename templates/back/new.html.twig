@@ -3,5 +3,7 @@
 {% block body %}
     <h1>New article for the blog</h1>
 
-    {{ include('back/_form_article.html.twig') }}
+    {{ include('_inc/_form.html.twig', {
+        submit_value: 'Ajouter'
+    }) }}
 {% endblock %}

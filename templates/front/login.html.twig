@@ -3,11 +3,7 @@
 {% block body %}
     <h1>Connexion</h1>
 
-    <form>
-        <label for="email">Email</label>
-        <input type="email" id="email">
-        <label for="password">Password</label>
-        <input type="password" id="password">
-        <input type="submit" value="Connexion">
-    </form>
+    {{ include('_inc/_form.html.twig', {
+        submit_value: 'Se connecter'
+    }) }}
 {% endblock %}
