@@ -8,11 +8,9 @@
     <p>Auteur : {{ article.author }}</p>
     <p>Mis à jour le : {{ article.updatedAt }}</p>
 
-    <form>
-        <label for="comment">Ajouter un commentaire</label>
-        <textarea id="comment"></textarea>
-        <input type="submit" value="Valider">
-    </form>
+    {{ include('_inc/_form.html.twig', {
+        submit_value: 'Ajouter'
+    }) }}
 
     <br><br>
     <br><br>

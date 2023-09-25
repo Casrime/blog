@@ -2,7 +2,8 @@
 
 {% block body %}
     <h1>Edit article {{ article.title }} with slug : {{ slug }}</h1>
-    <h2>{{ article.chapo }}</h2>
-    <p>Auteur : {{ article.author }}</p>
-    <p>Contenu : {{ article.content }}</p>
+
+    {{ include('_inc/_form.html.twig', {
+        submit_value: 'Mettre à jour'
+    }) }}
 {% endblock %}

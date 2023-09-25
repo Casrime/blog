@@ -7,18 +7,9 @@
 
     <h2>Lorem ipsum dolor sit amet</h2>
 
-    {# TODO - replace this form #}
-    <form>
-        <label for="lastname">Nom</label>
-        <input type="text" id="lastname">
-        <label for="firstname">Prénom</label>
-        <input type="text" id="firstname">
-        <label for="email">Email</label>
-        <input type="email" id="email">
-        <label for="message">Message</label>
-        <textarea id="message"></textarea>
-        <input type="submit" value="Envoyer">
-    </form>
+    {{ include('_inc/_form.html.twig', {
+        submit_value: 'Envoyer'
+    }) }}
 
     {# TODO - replace these links #}
     <a href="https://canva.com" target="_blank">Mon CV</a>

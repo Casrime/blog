@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Form\ArticleType;
 use Framework\Core\AbstractController;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
@@ -34,12 +35,20 @@ final class BackController extends AbstractController
 
     public function newArticle(Request $request): Response
     {
-        var_dump($request->request->get('title'));
-        // $form = $this->createForm(ArticleType::class);
-        // $form->handleRequest($request);
+        $form = $this->createForm(new ArticleType());
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $article = $form->getData();
+            // TODO - implement this method
+            // $this->manager->persist($article);
+            // $this->manager->flush();
+
+            return $this->redirectToRoute('admin');
+        }
 
         return $this->render('back/new.html.twig', [
-            'article' => 'a new article',
+            'form' => $form,
         ]);
     }
 
@@ -65,9 +74,19 @@ final class BackController extends AbstractController
             'content' => 'content',
         ];
 
+        $form = $this->createForm(new ArticleType());
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $this->redirectToRoute('show_article', [
+                'slug' => $slug,
+            ]);
+        }
+
         return $this->render('back/edit.html.twig', [
             'article' => $article,
             'slug' => $slug,
+            'form' => $form,
         ]);
     }
 
