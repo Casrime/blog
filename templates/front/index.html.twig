@@ -1,20 +1,29 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {# TODO - replace these values #}
-    <h1>NOM Prénom</h1>
-    <img src="https://cdn.pixabay.com/photo/2016/10/02/19/51/lion-1710301_1280.png" alt="Mon logo" id="logo">
+    <main class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    {# TODO - replace these values #}
+                    <h1>NOM Prénom</h1>
+                    <img src="https://cdn.pixabay.com/photo/2016/10/02/19/51/lion-1710301_1280.png" alt="Mon logo" id="logo">
 
-    <h2>Lorem ipsum dolor sit amet</h2>
+                    <h2>Lorem ipsum dolor sit amet</h2>
 
-    {{ include('_inc/_form.html.twig', {
-        submit_value: 'Envoyer'
-    }) }}
+                    {{ include('_inc/_form.html.twig', {
+                        submit_value: 'Envoyer'
+                    }) }}
 
-    {# TODO - replace these links #}
-    <a href="https://canva.com" target="_blank">Mon CV</a>
+                    {# TODO - replace these links #}
+                    {# TODO - move these links in the footer and add associated icons ? #}
+                    <a href="https://canva.com" target="_blank">Mon CV</a>
 
-    <a href="https://github.com" target="_blank">GitHub</a>
-    <a href="https://linkedin.com" target="_blank">LinkedIn</a>
-    <a href="https://twitter.com" target="_blank">Twitter</a>
+                    <a href="https://github.com" target="_blank">GitHub</a>
+                    <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+                    <a href="https://twitter.com" target="_blank">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </main>
 {% endblock %}

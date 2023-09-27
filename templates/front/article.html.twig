@@ -1,28 +1,35 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Hello {{ article.title }}</h1>
+    <article class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <h2>Hello {{ article.title }}</h2>
+                    <h3>Chapo : {{ article.chapo }}</h3>
+                    <p>{{ article.content }}</p>
 
-    <p>Chapo : {{ article.chapo }}</p>
-    <p>Contenu : {{ article.content }}</p>
-    <p>Auteur : {{ article.author }}</p>
-    <p>Mis à jour le : {{ article.updatedAt }}</p>
+                    <hr>
+                    <p>Mis à jour le : {{ article.updatedAt }} par {{ article.author }}</p>
 
-    {{ include('_inc/_form.html.twig', {
-        submit_value: 'Ajouter'
-    }) }}
 
-    <br><br>
-    <br><br>
-    <br><br>
+                    {{ include('_inc/_form.html.twig', {
+                        submit_value: 'Ajouter'
+                    }) }}
 
-    <div id="comments">
-        <h2>Commentaires</h2>
-        {% for comment in comments %}
-            <div class="comment">
-                {{ comment.comment }}
-                <hr>
+                    <hr class="my-4" />
+
+                    <div id="comments">
+                        <h2>Commentaires</h2>
+                        {% for comment in comments %}
+                            <div class="comment">
+                                {{ comment.comment }}
+                                <hr>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-        {% endfor %}
-    </div>
+        </div>
+    </article>
 {% endblock %}

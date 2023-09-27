@@ -55,7 +55,7 @@ final class BackController extends AbstractController
     public function editArticle(Request $request): Response
     {
         $slug = $request->query->get('slug');
-        var_dump($request->query->get('slug'));
+        // var_dump($request->query->get('slug'));
         // TODO - check if the slug exists in the article database table
         /*
         $article = $this->articleRepository->findBy([

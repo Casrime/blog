@@ -45,12 +45,16 @@ final class FrontController extends AbstractController
                 'content' => 'foo content',
                 // TODO - replace this by a slugger
                 'slug' => 'foo-title',
+                'chapo' => 'chapo foo title',
+                'updatedAt' => new \DateTime(),
             ],
             [
                 'title' => 'bar title',
                 'content' => 'bar content',
                 // TODO - replace this by a slugger
                 'slug' => 'bar-title',
+                'chapo' => 'chapo bar title',
+                'updatedAt' => new \DateTime(),
             ],
         ];
 
