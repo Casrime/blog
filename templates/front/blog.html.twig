@@ -1,23 +1,30 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Hello from the blog</h1>
-
-    <div class="col-12">
-        {% for article in articles %}
-            <h2>
-                <a href="{{ path('show_article', {
-                    slug: article.slug
-                }) }}">
-                    {{ article.title }}
-                </a>
-            </h2>
-            <p><i>Modifié le : {{ article.updatedAt }}</i></p>
-            <p>{{ article.chapo }}...</p>
-            {{ include('_inc/_articles_actions.html.twig', {
-                article: article
-            }) }}
-            <hr>
-        {% endfor %}
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                {% for article in articles %}
+                    <div class="post-preview">
+                        <a href="{{ path('show_article', {
+                            slug: article.slug
+                        }) }}">
+                            <h2 class="post-title">{{ article.title }}</h2>
+                            <h3 class="post-subtitle">{{ article.chapo }}</h3>
+                        </a>
+                        <p class="post-meta">
+                            Modifié le
+                            {{ article.updatedAt|date('d/m/Y') }}
+                        </p>
+                    </div>
+                    {{ include('_inc/_articles_actions.html.twig', {
+                        article: article
+                    }) }}
+                    <!-- Divider-->
+                    <hr class="my-4" />
+                {% endfor %}
+                <!-- Post preview-->
+            </div>
+        </div>
     </div>
 {% endblock %}
