@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Core;
 
+use App\Repository\ServiceRepository;
 use Framework\Database\Model\ModelInterface;
 use Framework\Form\Form;
 use Framework\Form\FormInterface;
@@ -23,10 +24,12 @@ use Twig\Loader\FilesystemLoader;
 abstract class AbstractController implements ControllerInterface
 {
     private Router $router;
+    private ServiceRepository $serviceRepository;
 
     public function __construct()
     {
         $this->router = new Router();
+        $this->serviceRepository = new ServiceRepository();
     }
 
     public function render(string $template, array $options = []): Response
@@ -72,4 +75,11 @@ abstract class AbstractController implements ControllerInterface
     {
         // TODO: Implement addFlash() method.
     }
+
+    /*
+    protected function getRepository($entityName): ServiceRepository
+    {
+        return $this->serviceRepository;
+    }
+    */
 }

@@ -6,13 +6,20 @@ namespace App\Model;
 
 use Framework\Database\Model\ModelInterface;
 
-final class Comment implements ModelInterface
+final class Comment
 {
+    private ?int $id = null;
     private string $comment;
+    private Article $article;
 
-    public function getId(): int
+    public function getId(): ?int
     {
-        return 1;
+        return $this->id;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     public function getComment(): string
@@ -23,5 +30,15 @@ final class Comment implements ModelInterface
     public function setComment(string $comment): void
     {
         $this->comment = $comment;
+    }
+
+    public function getArticle(): Article
+    {
+        return $this->article;
+    }
+
+    public function setArticle(Article $article): void
+    {
+        $this->article = $article;
     }
 }

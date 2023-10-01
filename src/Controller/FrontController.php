@@ -7,9 +7,11 @@ namespace App\Controller;
 use App\Form\CommentType;
 use App\Form\ContactType;
 use App\Form\UserType;
+use App\Model\Article;
 use App\Model\Comment;
 use App\Model\Contact;
 use App\Model\User;
+use App\Repository\ServiceRepository;
 use Framework\Core\AbstractController;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
@@ -39,42 +41,35 @@ final class FrontController extends AbstractController
 
     public function blog(): Response
     {
-        $articles = [
-            [
-                'title' => 'foo title',
-                'content' => 'foo content',
-                // TODO - replace this by a slugger
-                'slug' => 'foo-title',
-                'chapo' => 'chapo foo title',
-                'updatedAt' => new \DateTime(),
-            ],
-            [
-                'title' => 'bar title',
-                'content' => 'bar content',
-                // TODO - replace this by a slugger
-                'slug' => 'bar-title',
-                'chapo' => 'chapo bar title',
-                'updatedAt' => new \DateTime(),
-            ],
-        ];
+        $service = new ServiceRepository();
+        /** @var Article[] $articles */
+        $articles = $service->fetchEntities("SELECT * FROM article", Article::class, []);
+        var_dump($articles);
+        foreach ($articles as $article) {
+            var_dump($article->getComments());
+        }
+        die;
+        //$articles = $this->getRepository(Article::class)->findAll();
+        var_dump($articles);
+        die;
 
         return $this->render('front/blog.html.twig', [
-            'articles' => $articles,
+            'articles' => $this->articleRepository->findAll(),
         ]);
     }
 
     public function article(Request $request): Response
     {
+        // TODO - use the slug, check the value is correct first
         $slug = $request->query->get('slug');
-        $article = [
-            // TODO - replace this
-            'title' => str_replace('-', ' ', $slug),
-            'chapo' => 'chapo',
-            'content' => 'lorem ipsum dolor content',
-            'author' => 'author',
-            'updatedAt' => '2023-09-16',
-            'slug' => $slug,
-        ];
+
+        /** @var Article $article */
+        //$article = $this->articleRepository->findBy(['slug' => 'mon-premier-article']);
+        //$article->getComments();
+        //$comments = $this->commentRepository->findBy(['article_id' => $article->getId()]);
+        //$comments = $this->commentRepository->findBy(['article_id' => 1]);
+        //var_dump($article->getComments());
+        //die;
 
         $comments = [
             [
