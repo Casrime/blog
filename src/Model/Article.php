@@ -13,7 +13,7 @@ final class Article
     private string $slug;
     private string $chapo;
     private string $content;
-    //private \DateTime $createdAt;
+    private \DateTime $createdAt;
     private ?\DateTime $updatedAt = null;
     private array $comments = [];
 

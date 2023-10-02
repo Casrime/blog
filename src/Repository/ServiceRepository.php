@@ -46,7 +46,11 @@ class ServiceRepository extends Database
             $propertyName = $property->getName();
             if (array_key_exists($propertyName, $data)) {
                 $property->setAccessible(true);
-                $property->setValue($entity, $data[$propertyName]);
+                if ('DateTime' === $property->getType()->getName() && null !== $data[$propertyName]) {
+                    $property->setValue($entity, new \DateTime($data[$propertyName]));
+                } else {
+                    $property->setValue($entity, $data[$propertyName]);
+                }
             } elseif ($propertyName === 'comments' && property_exists($entity, 'comments')) {
                 var_dump($entity->getId());
                 // Si la propriété est 'comments' et existe dans l'entité, hydrate-la avec les commentaires
