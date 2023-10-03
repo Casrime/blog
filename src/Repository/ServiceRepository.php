@@ -92,4 +92,26 @@ class ServiceRepository extends Database
 
         return $entities;
     }
+
+    public function findOneBy(string $tableName, string $className, array $criteria)
+    {
+        $whereConditions = [];
+        $params = [];
+        foreach ($criteria as $column => $value) {
+            $whereConditions[] = "$column = :$column";
+            $params[":$column"] = $value;
+        }
+
+        //var_dump(implode(' AND ', $whereConditions));
+        $query = "SELECT * FROM $tableName WHERE " . implode(' AND ', $whereConditions);
+        //$query = "SELECT * FROM $tableName INNER JOIN article ON comment.article_id = article.id WHERE article_id = :article_id";
+        var_dump($query);
+        $stmt = $this->executeQuery($query, $params);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($data) {
+            return $this->buildEntity($data, $className);
+        }
+
+        return null;
+    }
 }

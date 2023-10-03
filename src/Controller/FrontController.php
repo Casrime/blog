@@ -64,7 +64,7 @@ final class FrontController extends AbstractController
         $slug = $request->query->get('slug');
 
         /** @var Article $article */
-        //$article = $this->articleRepository->findBy(['slug' => 'mon-premier-article']);
+        $article = $this->getRepository(Article::class)->findOneBy('article', Article::class, ['slug' => 'mon-premier-article']);
         //$article->getComments();
         //$comments = $this->commentRepository->findBy(['article_id' => $article->getId()]);
         //$comments = $this->commentRepository->findBy(['article_id' => 1]);
