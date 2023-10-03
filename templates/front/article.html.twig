@@ -12,7 +12,6 @@
                     <hr>
                     <p>Mis à jour le : {{ article.updatedAt }} par {{ article.author }}</p>
 
-
                     {{ include('_inc/_form.html.twig', {
                         submit_value: 'Ajouter'
                     }) }}
@@ -21,7 +20,7 @@
 
                     <div id="comments">
                         <h2>Commentaires</h2>
-                        {% for comment in comments %}
+                        {% for comment in article.comments %}
                             <div class="comment">
                                 {{ comment.comment }}
                                 <hr>

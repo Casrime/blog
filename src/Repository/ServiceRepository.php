@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Model\Comment;
 use Framework\Database\Database;
+use Framework\Database\Model\ModelInterface;
 use PDO;
 use PDOStatement;
 use ReflectionClass;
@@ -39,8 +40,6 @@ class ServiceRepository extends Database
         $reflection = new ReflectionClass($className);
         //$entity = $reflection->newInstanceWithoutConstructor();
         $entity = new $className;
-        var_dump($className);
-        var_dump($entity->getId());
 
         foreach ($reflection->getProperties() as $property) {
             $propertyName = $property->getName();
@@ -52,7 +51,6 @@ class ServiceRepository extends Database
                     $property->setValue($entity, $data[$propertyName]);
                 }
             } elseif ($propertyName === 'comments' && property_exists($entity, 'comments')) {
-                var_dump($entity->getId());
                 // Si la propriété est 'comments' et existe dans l'entité, hydrate-la avec les commentaires
                 $comments = $this->findBy('comment', Comment::class, ['article_id' => $entity->getId()]);
                 foreach ($comments as $comment) {
@@ -67,7 +65,7 @@ class ServiceRepository extends Database
         return $entity;
     }
 
-    public function findBy(string $tableName, string $className, array $criteria)
+    public function findBy(string $tableName, string $className, array $criteria): array
     {
         $whereConditions = [];
         $params = [];
@@ -76,14 +74,9 @@ class ServiceRepository extends Database
             $params[":$column"] = $value;
         }
 
-        //var_dump(implode(' AND ', $whereConditions));
         $query = "SELECT * FROM $tableName WHERE " . implode(' AND ', $whereConditions);
-        //$query = "SELECT * FROM $tableName INNER JOIN article ON comment.article_id = article.id WHERE article_id = :article_id";
-        var_dump($query);
         $stmt = $this->executeQuery($query, $params);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        var_dump($criteria);
-        var_dump($data);
 
         $entities = [];
         foreach ($data as $entityData) {
@@ -93,7 +86,7 @@ class ServiceRepository extends Database
         return $entities;
     }
 
-    public function findOneBy(string $tableName, string $className, array $criteria)
+    public function findOneBy(string $tableName, string $className, array $criteria): ?ModelInterface
     {
         $whereConditions = [];
         $params = [];
@@ -102,10 +95,7 @@ class ServiceRepository extends Database
             $params[":$column"] = $value;
         }
 
-        //var_dump(implode(' AND ', $whereConditions));
         $query = "SELECT * FROM $tableName WHERE " . implode(' AND ', $whereConditions);
-        //$query = "SELECT * FROM $tableName INNER JOIN article ON comment.article_id = article.id WHERE article_id = :article_id";
-        var_dump($query);
         $stmt = $this->executeQuery($query, $params);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($data) {

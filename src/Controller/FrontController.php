@@ -48,13 +48,14 @@ final class FrontController extends AbstractController
         foreach ($articles as $article) {
             var_dump($article->getComments());
         }
-        die;
+        //die;
         //$articles = $this->getRepository(Article::class)->findAll();
         var_dump($articles);
-        die;
+        //die;
 
         return $this->render('front/blog.html.twig', [
-            'articles' => $this->articleRepository->findAll(),
+            //'articles' => $this->articleRepository->findAll(),
+            'articles' => $articles,
         ]);
     }
 
@@ -65,31 +66,16 @@ final class FrontController extends AbstractController
 
         /** @var Article $article */
         $article = $this->getRepository(Article::class)->findOneBy('article', Article::class, ['slug' => 'mon-premier-article']);
-        //$article->getComments();
-        //$comments = $this->commentRepository->findBy(['article_id' => $article->getId()]);
-        //$comments = $this->commentRepository->findBy(['article_id' => 1]);
-        //var_dump($article->getComments());
-        //die;
-
-        $comments = [
-            [
-                'comment' => 'comment one',
-                'validated' => true,
-            ],
-            [
-                'comment' => 'comment two',
-                'validated' => true,
-            ],
-        ];
 
         $form = $this->createForm(new CommentType(), new Comment());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $comment = $form->getData();
-            // TODO - implement this method
-            // $this->manager->persist($comment);
-            // $this->manager->flush();
+            $comment->setArticle($article);
+
+            $this->manager->persist($comment);
+            $this->manager->flush();
 
             return $this->redirectToRoute('show_article', [
                 'slug' => $slug,
@@ -98,7 +84,6 @@ final class FrontController extends AbstractController
 
         return $this->render('front/article.html.twig', [
             'article' => $article,
-            'comments' => $comments,
             'form' => $form,
         ]);
     }
@@ -112,8 +97,8 @@ final class FrontController extends AbstractController
             $user = $form->getData();
             // TODO - implement these methods
             // $user->isActive(false);
-            // $this->manager->persist($user);
-            // $this->manager->flush();
+            $this->manager->persist($user);
+            $this->manager->flush();
 
             return $this->redirectToRoute('register');
         }

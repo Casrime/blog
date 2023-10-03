@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Framework\Database;
 
+use Framework\Database\Model\ModelInterface;
+
 class Manager extends Database
 {
     public function persist(object $entity): void
@@ -15,11 +17,16 @@ class Manager extends Database
         $values = [];
         foreach ($properties as $property) {
             $propertyName = $property->getName();
-            if ('DateTime' === $property->getType()->getName() && null !== $property->getValue($entity)) {
+            if ($property->getValue($entity) instanceof ModelInterface) {
+                $columns[] = $propertyName.'_id';
+                $prepareParams[] = '?';
+                $values[] = $property->getValue($entity)->getId();
+                var_dump('instance of');
+            } elseif ('DateTime' === $property->getType()->getName() && null !== $property->getValue($entity)) {
                 $columns[] = $propertyName;
                 $prepareParams[] = '?';
                 $values[] = $property->getValue($entity)->format('Y-m-d H:i:s');
-            } elseif ('array' !== $property->getType()->getName() && null !== $property->getValue($entity)) {
+            } elseif ('array' !== $property->getType()->getName() && null !== $property->getValue($entity)){
                 $columns[] = $propertyName;
                 $prepareParams[] = '?';
                 $values[] = $property->getValue($entity);

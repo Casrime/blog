@@ -10,7 +10,7 @@ final class Comment implements ModelInterface
 {
     private ?int $id = null;
     private string $comment;
-    private Article $article;
+    private ?Article $article = null;
 
     public function getId(): ?int
     {
@@ -32,12 +32,12 @@ final class Comment implements ModelInterface
         $this->comment = $comment;
     }
 
-    public function getArticle(): Article
+    public function getArticle(): ?Article
     {
         return $this->article;
     }
 
-    public function setArticle(Article $article): void
+    public function setArticle(?Article $article): void
     {
         $this->article = $article;
     }
