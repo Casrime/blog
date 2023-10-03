@@ -6,7 +6,7 @@ namespace App\Model;
 
 use Framework\Database\Model\ModelInterface;
 
-final class Article
+final class Article implements ModelInterface
 {
     private ?int $id = null;
     private string $title;
@@ -16,6 +16,11 @@ final class Article
     private \DateTime $createdAt;
     private ?\DateTime $updatedAt = null;
     private array $comments = [];
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
 
     public function getId(): ?int
     {

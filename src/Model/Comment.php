@@ -6,7 +6,7 @@ namespace App\Model;
 
 use Framework\Database\Model\ModelInterface;
 
-final class Comment
+final class Comment implements ModelInterface
 {
     private ?int $id = null;
     private string $comment;

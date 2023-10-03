@@ -10,6 +10,8 @@ abstract class Database
     const DB_HOST = 'mysql:host=localhost;dbname=blog;charset=utf8';
     const DB_USER = 'root';
     const DB_PASS = '';
+    private \PDOStatement|false $statement;
+    protected array $params = [];
 
     public function getConnection()
     {
@@ -25,5 +27,19 @@ abstract class Database
         {
             die ('Erreur de connection :'.$errorConnection->getMessage());
         }
+    }
+
+    public function prepare($query)
+    {
+        $this->statement = $this->getConnection()->prepare($query);
+
+        return $this->statement;
+    }
+
+    public function execute()
+    {
+        $this->statement->execute($this->params);
+        // TODO - close cursor
+        //$this->statement->closeCursor();
     }
 }

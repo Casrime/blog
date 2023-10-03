@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Form\ArticleType;
+use App\Model\Article;
 use Framework\Core\AbstractController;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
@@ -35,14 +36,17 @@ final class BackController extends AbstractController
 
     public function newArticle(Request $request): Response
     {
-        $form = $this->createForm(new ArticleType());
+        $form = $this->createForm(new ArticleType(), new Article());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Article $article */
             $article = $form->getData();
+            $article->setSlug('a-great-slug');
+            var_dump($article);
             // TODO - implement this method
-            // $this->manager->persist($article);
-            // $this->manager->flush();
+            $this->manager->persist($article);
+            $this->manager->flush();
 
             return $this->redirectToRoute('admin');
         }

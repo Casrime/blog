@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Framework\Core;
 
 use App\Repository\ServiceRepository;
+use Framework\Database\Manager;
 use Framework\Database\Model\ModelInterface;
 use Framework\Form\Form;
 use Framework\Form\FormInterface;
@@ -25,11 +26,13 @@ abstract class AbstractController implements ControllerInterface
 {
     private Router $router;
     private ServiceRepository $serviceRepository;
+    protected Manager $manager;
 
     public function __construct()
     {
         $this->router = new Router();
         $this->serviceRepository = new ServiceRepository();
+        $this->manager = new Manager();
     }
 
     public function render(string $template, array $options = []): Response
@@ -76,10 +79,8 @@ abstract class AbstractController implements ControllerInterface
         // TODO: Implement addFlash() method.
     }
 
-    /*
     protected function getRepository($entityName): ServiceRepository
     {
         return $this->serviceRepository;
     }
-    */
 }

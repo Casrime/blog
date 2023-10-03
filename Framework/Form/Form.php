@@ -150,9 +150,11 @@ class Form implements FormInterface
 
         foreach ($attributes as $attribute) {
             $attributeName = $attribute->getName();
-            /** @var AbstractType $abstractType */
-            $abstractType = $data[$attributeName];
-            $this->model->{'set'.ucfirst($attributeName)}($abstractType->getValue());
+            if (isset($data[$attributeName])) {
+                /** @var AbstractType $abstractType */
+                $abstractType = $data[$attributeName];
+                $this->model->{'set'.ucfirst($attributeName)}($abstractType->getValue());
+            }
         }
     }
 }
