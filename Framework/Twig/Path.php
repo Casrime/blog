@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Twig;
 
+use Framework\Routing\Route;
 use Framework\Routing\RouteCollection;
 use Framework\Routing\Router;
 use Twig\TwigFunction;
@@ -12,6 +13,7 @@ final class Path implements PathInterface
 {
     private Router $router;
     private RouteCollection $routes;
+    private ?Route $originalRoute = null;
 
     public function __construct()
     {
@@ -36,12 +38,20 @@ final class Path implements PathInterface
                         }
                     }
 
+                    $this->originalRoute = clone $route;
+                    $this->originalRoute->setPath($route->getPath());
                     $route->updatePath();
+
                     if (0 < count($this->router->matchRegex($route))) {
                         throw new \Exception(sprintf('missing parameter : %s', $route->removeSpecialChars($this->router->matchRegex($route)[0])));
                     }
 
-                    return $route->getPath();
+                    $path = $route->getPath();
+
+                    // Restore original path with wildcard if path is used multiple times for matching with regex
+                    $route->setPath($this->originalRoute->getPath());
+
+                    return $path;
                 }
             }
             throw new \Exception(sprintf('No route found with the name %s', $value));
