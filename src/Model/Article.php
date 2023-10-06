@@ -9,10 +9,12 @@ use Framework\Database\Model\ModelInterface;
 final class Article implements ModelInterface
 {
     private ?int $id = null;
-    private string $title;
+    private ?string $title = null;
     private string $slug;
-    private string $chapo;
-    private string $content;
+    private ?string $chapo = null;
+    // TODO - change this to be a relation
+    //private string $author;
+    private ?string $content = null;
     private \DateTime $createdAt;
     private ?\DateTime $updatedAt = null;
     private array $comments = [];
@@ -32,12 +34,12 @@ final class Article implements ModelInterface
         $this->id = $id;
     }
 
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    public function setTitle(string $title): void
+    public function setTitle(?string $title): void
     {
         $this->title = $title;
     }
@@ -52,22 +54,32 @@ final class Article implements ModelInterface
         $this->slug = $slug;
     }
 
-    public function getChapo(): string
+    public function getChapo(): ?string
     {
         return $this->chapo;
     }
 
-    public function setChapo(string $chapo): void
+    public function setChapo(?string $chapo): void
     {
         $this->chapo = $chapo;
     }
 
-    public function getContent(): string
+    public function getAuthor(): string
+    {
+        return 'author';
+    }
+
+    public function setAuthor(string $author): void
+    {
+        $this->author = $author;
+    }
+
+    public function getContent(): ?string
     {
         return $this->content;
     }
 
-    public function setContent(string $content): void
+    public function setContent(?string $content): void
     {
         $this->content = $content;
     }

@@ -30,7 +30,6 @@ class ServiceRepository extends Database
         foreach ($data as $entityData) {
             $entities[] = $this->buildEntity($entityData, $className);
         }
-        var_dump($entities);
 
         return $entities;
     }

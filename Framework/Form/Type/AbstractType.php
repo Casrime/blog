@@ -10,7 +10,7 @@ abstract class AbstractType implements AbstractTypeInterface
     private string $type;
     private array $options;
 
-    private string $value = '';
+    private ?string $value = null;
 
     protected string $content = '';
 
@@ -49,12 +49,12 @@ abstract class AbstractType implements AbstractTypeInterface
         return $this->options[$key] ?? null;
     }
 
-    public function getValue(): string
+    public function getValue(): ?string
     {
         return $this->value;
     }
 
-    public function setValue(string $value): void
+    public function setValue(?string $value): void
     {
         $this->value = $value;
     }

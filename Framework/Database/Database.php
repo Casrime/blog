@@ -12,6 +12,7 @@ abstract class Database
     const DB_PASS = '';
     private \PDOStatement|false $statement;
     protected array $params = [];
+    private ?string $entityName = null;
 
     public function getConnection()
     {
@@ -38,8 +39,22 @@ abstract class Database
 
     public function execute()
     {
-        $this->statement->execute($this->params);
+        try {
+            $this->statement->execute($this->params);
+        } catch (Exception $exception) {
+            die('Erreur : ' . $exception->getMessage());
+        }
         // TODO - close cursor
         //$this->statement->closeCursor();
+    }
+
+    public function getEntityName(): ?string
+    {
+        return $this->entityName;
+    }
+
+    public function setEntityName(?string $entityName): void
+    {
+        $this->entityName = $entityName;
     }
 }

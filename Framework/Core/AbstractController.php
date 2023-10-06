@@ -13,6 +13,7 @@ use Framework\Form\FormTypeInterface;
 use Framework\HttpFoundation\RedirectResponse;
 use Framework\HttpFoundation\Response;
 use Framework\Routing\Router;
+use Framework\Slugger\Slugger;
 use Framework\Twig\FormEnd;
 use Framework\Twig\FormRow;
 use Framework\Twig\FormStart;
@@ -27,12 +28,14 @@ abstract class AbstractController implements ControllerInterface
     private Router $router;
     private ServiceRepository $serviceRepository;
     protected Manager $manager;
+    protected Slugger $slugger;
 
     public function __construct()
     {
         $this->router = new Router();
         $this->serviceRepository = new ServiceRepository();
         $this->manager = new Manager();
+        $this->slugger = new Slugger();
     }
 
     public function render(string $template, array $options = []): Response
@@ -65,6 +68,7 @@ abstract class AbstractController implements ControllerInterface
         // TODO - replace this by RouteInterface
         foreach ($this->router->loadRoutes()->all() as $route) {
             if ($name === $route->getName()) {
+                var_dump($options);
                 $route->setArguments($options);
                 $route->updatePath();
 
@@ -79,8 +83,10 @@ abstract class AbstractController implements ControllerInterface
         // TODO: Implement addFlash() method.
     }
 
-    protected function getRepository($entityName): ServiceRepository
+    protected function getRepository(string $entityName): ServiceRepository
     {
+        $this->serviceRepository->setEntityName($entityName);
+
         return $this->serviceRepository;
     }
 }

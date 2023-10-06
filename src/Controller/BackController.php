@@ -42,9 +42,8 @@ final class BackController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Article $article */
             $article = $form->getData();
-            $article->setSlug('a-great-slug');
-            var_dump($article);
-            // TODO - implement this method
+            $article->setSlug($this->slugger->slug($article->getTitle()));
+
             $this->manager->persist($article);
             $this->manager->flush();
 
@@ -71,17 +70,24 @@ final class BackController extends AbstractController
         */
         // TODO - if not, send an exception
 
-        $article = [
-            'title' => 'title',
-            'chapo' => 'chapo',
-            'author' => 'author',
-            'content' => 'content',
-        ];
+        $article = new Article();
+        $article->setId(11);
+        $article->setTitle('title');
+        $article->setChapo('chapo');
+        $article->setContent('content');
 
-        $form = $this->createForm(new ArticleType());
+        $form = $this->createForm(new ArticleType(), $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Article $article */
+            $article = $form->getData();
+            $article->setSlug($this->slugger->slug($article->getTitle()));
+            $article->setUpdatedAt(new \DateTime());
+
+            $this->manager->persist($article);
+            $this->manager->flush();
+
             return $this->redirectToRoute('show_article', [
                 'slug' => $slug,
             ]);

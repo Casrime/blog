@@ -28,10 +28,16 @@ class Form implements FormInterface
      */
     public function createForm(FormTypeInterface $formType, ?ModelInterface $model = null): self
     {
+        //var_dump($model->{'get'.ucfirst('title()')});
         // TODO - handle models
         $this->model = $model;
         $formType->buildForm();
         $this->fieldCollection = $formType->getFields();
+        //var_dump($this->fieldCollection);
+
+        foreach ($this->fieldCollection->all() as $abstractType) {
+            $abstractType->setValue($model->{'get'.ucfirst($abstractType->getName())}());
+        }
 
         return $this;
     }

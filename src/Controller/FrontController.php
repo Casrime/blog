@@ -15,6 +15,7 @@ use App\Repository\ServiceRepository;
 use Framework\Core\AbstractController;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
+use Framework\Slugger\Slugger;
 
 final class FrontController extends AbstractController
 {
@@ -44,17 +45,9 @@ final class FrontController extends AbstractController
         $service = new ServiceRepository();
         /** @var Article[] $articles */
         $articles = $service->fetchEntities("SELECT * FROM article", Article::class, []);
-        var_dump($articles);
-        foreach ($articles as $article) {
-            var_dump($article->getComments());
-        }
-        //die;
-        //$articles = $this->getRepository(Article::class)->findAll();
-        var_dump($articles);
-        //die;
 
         return $this->render('front/blog.html.twig', [
-            //'articles' => $this->articleRepository->findAll(),
+            //'articles' => $this->getRepository(Article::class)->findAll(),
             'articles' => $articles,
         ]);
     }
@@ -63,6 +56,10 @@ final class FrontController extends AbstractController
     {
         // TODO - use the slug, check the value is correct first
         $slug = $request->query->get('slug');
+        var_dump($slug);
+        $slugger = new Slugger();
+        var_dump($slugger->slug($slug));
+        die;
 
         /** @var Article $article */
         $article = $this->getRepository(Article::class)->findOneBy('article', Article::class, ['slug' => 'mon-premier-article']);
