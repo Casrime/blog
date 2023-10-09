@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Model\Comment;
 use Framework\Database\Database;
 use Framework\Database\Model\ModelInterface;
 use PDO;
@@ -77,13 +78,19 @@ class ServiceRepository extends Database
             return null;
         }
         $entity = $this->buildEntity($result);
+        // START TODO - handle relations
+        $subQuery = $this->getConnection()->prepare('SELECT * FROM comment WHERE article_id = :article_id');
+        $subQuery->execute(['article_id' => $entity->getId()]);
+        $comments = $subQuery->fetchAll(PDO::FETCH_ASSOC);
+        if ([] !== $comments) {
+            $this->setEntityName(Comment::class);
+            foreach ($comments as $comment) {
+                $entity->addComment($this->buildEntity($comment));
+            }
+        }
+        // END TODO - handle relations
         $query->closeCursor();
 
         return $entity;
-    }
-
-    public function count(array $criteria)
-    {
-
     }
 }

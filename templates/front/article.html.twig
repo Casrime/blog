@@ -10,7 +10,7 @@
                     <p>{{ article.content }}</p>
 
                     <hr>
-                    <p>Mis à jour le : {{ article.updatedAt }} par {{ article.author }}</p>
+                    <p>Mis à jour le : {{ article.updatedAt|date('d/m/Y') }} par {{ article.author }}</p>
 
                     {{ include('_inc/_form.html.twig', {
                         submit_value: 'Ajouter'
