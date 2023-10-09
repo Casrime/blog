@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace Framework\Database;
 
 use App\Model\Comment;
-use Framework\Database\Database;
 use Framework\Database\Model\ModelInterface;
 use PDO;
-use PDOStatement;
 use ReflectionClass;
 
 class ServiceRepository extends Database
