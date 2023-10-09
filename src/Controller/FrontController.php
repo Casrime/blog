@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Form\CommentType;
 use App\Form\ContactType;
 use App\Form\UserType;
+use App\Model\Article;
 use App\Model\Comment;
 use App\Model\Contact;
 use App\Model\User;
@@ -39,62 +40,32 @@ final class FrontController extends AbstractController
 
     public function blog(): Response
     {
-        $articles = [
-            [
-                'title' => 'foo title',
-                'content' => 'foo content',
-                // TODO - replace this by a slugger
-                'slug' => 'foo-title',
-                'chapo' => 'chapo foo title',
-                'updatedAt' => new \DateTime(),
-            ],
-            [
-                'title' => 'bar title',
-                'content' => 'bar content',
-                // TODO - replace this by a slugger
-                'slug' => 'bar-title',
-                'chapo' => 'chapo bar title',
-                'updatedAt' => new \DateTime(),
-            ],
-        ];
-
         return $this->render('front/blog.html.twig', [
-            'articles' => $articles,
+            'articles' => $this->getRepository(Article::class)->findAll(),
         ]);
     }
 
     public function article(Request $request): Response
     {
+        // TODO - use the slug, check the value is correct first
         $slug = $request->query->get('slug');
-        $article = [
-            // TODO - replace this
-            'title' => str_replace('-', ' ', $slug),
-            'chapo' => 'chapo',
-            'content' => 'lorem ipsum dolor content',
-            'author' => 'author',
-            'updatedAt' => '2023-09-16',
-            'slug' => $slug,
-        ];
+        var_dump($slug);
 
-        $comments = [
-            [
-                'comment' => 'comment one',
-                'validated' => true,
-            ],
-            [
-                'comment' => 'comment two',
-                'validated' => true,
-            ],
-        ];
+        /** @var Article $article */
+        $article = $this->getRepository(Article::class)->findOneBy(['slug' => 'title-updated']);
+        if (null === $article) {
+            throw new \Exception('Article not found');
+        }
 
         $form = $this->createForm(new CommentType(), new Comment());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $comment = $form->getData();
-            // TODO - implement this method
-            // $this->manager->persist($comment);
-            // $this->manager->flush();
+            $comment->setArticle($article);
+
+            $this->manager->persist($comment);
+            $this->manager->flush();
 
             return $this->redirectToRoute('show_article', [
                 'slug' => $slug,
@@ -103,7 +74,6 @@ final class FrontController extends AbstractController
 
         return $this->render('front/article.html.twig', [
             'article' => $article,
-            'comments' => $comments,
             'form' => $form,
         ]);
     }
@@ -117,8 +87,8 @@ final class FrontController extends AbstractController
             $user = $form->getData();
             // TODO - implement these methods
             // $user->isActive(false);
-            // $this->manager->persist($user);
-            // $this->manager->flush();
+            $this->manager->persist($user);
+            $this->manager->flush();
 
             return $this->redirectToRoute('register');
         }

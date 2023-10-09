@@ -8,20 +8,37 @@ use Framework\Database\Model\ModelInterface;
 
 final class Comment implements ModelInterface
 {
-    private string $comment;
+    private ?int $id = null;
+    private ?string $comment = null;
+    private ?Article $article = null;
 
-    public function getId(): int
+    public function getId(): ?int
     {
-        return 1;
+        return $this->id;
     }
 
-    public function getComment(): string
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function getComment(): ?string
     {
         return $this->comment;
     }
 
-    public function setComment(string $comment): void
+    public function setComment(?string $comment): void
     {
         $this->comment = $comment;
+    }
+
+    public function getArticle(): ?Article
+    {
+        return $this->article;
+    }
+
+    public function setArticle(?Article $article): void
+    {
+        $this->article = $article;
     }
 }

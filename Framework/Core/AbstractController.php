@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Framework\Core;
 
+use Framework\Database\Manager;
 use Framework\Database\Model\ModelInterface;
+use Framework\Database\ServiceRepository;
 use Framework\Form\Form;
 use Framework\Form\FormInterface;
 use Framework\Form\FormTypeInterface;
 use Framework\HttpFoundation\RedirectResponse;
 use Framework\HttpFoundation\Response;
 use Framework\Routing\Router;
+use Framework\Slugger\Slugger;
 use Framework\Twig\FormEnd;
 use Framework\Twig\FormRow;
 use Framework\Twig\FormStart;
@@ -23,10 +26,16 @@ use Twig\Loader\FilesystemLoader;
 abstract class AbstractController implements ControllerInterface
 {
     private Router $router;
+    private ServiceRepository $serviceRepository;
+    protected Manager $manager;
+    protected Slugger $slugger;
 
     public function __construct()
     {
         $this->router = new Router();
+        $this->serviceRepository = new ServiceRepository();
+        $this->manager = new Manager();
+        $this->slugger = new Slugger();
     }
 
     public function render(string $template, array $options = []): Response
@@ -59,6 +68,7 @@ abstract class AbstractController implements ControllerInterface
         // TODO - replace this by RouteInterface
         foreach ($this->router->loadRoutes()->all() as $route) {
             if ($name === $route->getName()) {
+                var_dump($options);
                 $route->setArguments($options);
                 $route->updatePath();
 
@@ -71,5 +81,12 @@ abstract class AbstractController implements ControllerInterface
     protected function addFlash(string $key, string $message): void
     {
         // TODO: Implement addFlash() method.
+    }
+
+    protected function getRepository(string $entityName): ServiceRepository
+    {
+        $this->serviceRepository->setEntityName($entityName);
+
+        return $this->serviceRepository;
     }
 }
