@@ -5,7 +5,7 @@
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    <h2>Edit article {{ article.title }} with slug : {{ slug }}</h2>
+                    <h2>Edit article {{ article.title }} with slug : {{ article.slug }}</h2>
                     <div class="my-5">
                         {{ include('_inc/_form.html.twig', {
                             submit_value: 'Mettre à jour'

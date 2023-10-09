@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Model\Comment;
 use Framework\Database\Database;
 use Framework\Database\Model\ModelInterface;
 use PDO;
@@ -13,32 +12,11 @@ use ReflectionClass;
 
 class ServiceRepository extends Database
 {
-    protected function executeQuery(string $query, array $params = []): PDOStatement
+    protected function buildEntity(array $data): object
     {
-        $stmt = $this->getConnection()->prepare($query);
-        $stmt->execute($params);
-
-        return $stmt;
-    }
-
-    public function fetchEntities(string $query, string $className, array $params = []): array
-    {
-        $stmt = $this->executeQuery($query, $params);
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        $entities = [];
-        foreach ($data as $entityData) {
-            $entities[] = $this->buildEntity($entityData, $className);
-        }
-
-        return $entities;
-    }
-
-    protected function buildEntity(array $data, string $className): object
-    {
-        $reflection = new ReflectionClass($className);
-        //$entity = $reflection->newInstanceWithoutConstructor();
-        $entity = new $className;
+        $entityName = $this->getEntityName();
+        $reflection = new ReflectionClass($this->getEntityName());
+        $entity = new $entityName;
 
         foreach ($reflection->getProperties() as $property) {
             $propertyName = $property->getName();
@@ -49,58 +27,63 @@ class ServiceRepository extends Database
                 } else {
                     $property->setValue($entity, $data[$propertyName]);
                 }
-            } elseif ($propertyName === 'comments' && property_exists($entity, 'comments')) {
-                // Si la propriété est 'comments' et existe dans l'entité, hydrate-la avec les commentaires
-                $comments = $this->findBy('comment', Comment::class, ['article_id' => $entity->getId()]);
-                foreach ($comments as $comment) {
-                    $entity->addComment($comment);
-                }
-                $property->setAccessible(true);
-                $property->setValue($entity, $comments);
             }
-            //var_dump($entity->getId());
         }
 
         return $entity;
     }
 
-    public function findBy(string $tableName, string $className, array $criteria): array
+    public function findAll()
     {
-        $whereConditions = [];
-        $params = [];
-        foreach ($criteria as $column => $value) {
-            $whereConditions[] = "$column = :$column";
-            $params[":$column"] = $value;
-        }
+        return $this->findBy([]);
+    }
 
-        $query = "SELECT * FROM $tableName WHERE " . implode(' AND ', $whereConditions);
-        $stmt = $this->executeQuery($query, $params);
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    public function find(int $id)
+    {
+        $tableName = (new ReflectionClass($this->getEntityName()))->getShortName();
+        $query = $this->getConnection()->prepare('SELECT * FROM '.$tableName.' WHERE id = :id');
+        $query->execute(['id' => $id]);
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        $entity = $this->buildEntity($result);
+        $query->closeCursor();
 
+        return $entity;
+    }
+
+    // TODO - handle parameters
+    public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
+    {
+        $tableName = (new ReflectionClass($this->getEntityName()))->getShortName();
+        $query = $this->getConnection()->prepare('SELECT * FROM '.$tableName);
+        $query->execute([]);
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
         $entities = [];
-        foreach ($data as $entityData) {
-            $entities[] = $this->buildEntity($entityData, $className);
+        foreach ($result as $entry){
+            $entities[] = $this->buildEntity($entry);
         }
+        $query->closeCursor();
 
         return $entities;
     }
 
-    public function findOneBy(string $tableName, string $className, array $criteria): ?ModelInterface
+    // TODO - handle parameters
+    public function findOneBy(array $criteria, array $orderBy = []): ?ModelInterface
     {
-        $whereConditions = [];
-        $params = [];
-        foreach ($criteria as $column => $value) {
-            $whereConditions[] = "$column = :$column";
-            $params[":$column"] = $value;
+        $tableName = (new ReflectionClass($this->getEntityName()))->getShortName();
+        $query = $this->getConnection()->prepare('SELECT * FROM '.$tableName.' WHERE '.array_keys($criteria)[0].' = :'.array_keys($criteria)[0]);
+        $query->execute($criteria);
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        if (false === $result) {
+            return null;
         }
+        $entity = $this->buildEntity($result);
+        $query->closeCursor();
 
-        $query = "SELECT * FROM $tableName WHERE " . implode(' AND ', $whereConditions);
-        $stmt = $this->executeQuery($query, $params);
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($data) {
-            return $this->buildEntity($data, $className);
-        }
+        return $entity;
+    }
 
-        return null;
+    public function count(array $criteria)
+    {
+
     }
 }

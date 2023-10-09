@@ -11,11 +11,9 @@ use App\Model\Article;
 use App\Model\Comment;
 use App\Model\Contact;
 use App\Model\User;
-use App\Repository\ServiceRepository;
 use Framework\Core\AbstractController;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
-use Framework\Slugger\Slugger;
 
 final class FrontController extends AbstractController
 {
@@ -42,13 +40,8 @@ final class FrontController extends AbstractController
 
     public function blog(): Response
     {
-        $service = new ServiceRepository();
-        /** @var Article[] $articles */
-        $articles = $service->fetchEntities("SELECT * FROM article", Article::class, []);
-
         return $this->render('front/blog.html.twig', [
-            //'articles' => $this->getRepository(Article::class)->findAll(),
-            'articles' => $articles,
+            'articles' => $this->getRepository(Article::class)->findAll(),
         ]);
     }
 
@@ -57,12 +50,12 @@ final class FrontController extends AbstractController
         // TODO - use the slug, check the value is correct first
         $slug = $request->query->get('slug');
         var_dump($slug);
-        $slugger = new Slugger();
-        var_dump($slugger->slug($slug));
-        die;
 
         /** @var Article $article */
-        $article = $this->getRepository(Article::class)->findOneBy('article', Article::class, ['slug' => 'mon-premier-article']);
+        $article = $this->getRepository(Article::class)->findOneBy(['slug' => 'mon-deuxieme-article']);
+        if (null === $article) {
+            throw new \Exception('Article not found');
+        }
 
         $form = $this->createForm(new CommentType(), new Comment());
         $form->handleRequest($request);

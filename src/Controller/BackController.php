@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Form\ArticleType;
 use App\Model\Article;
+use App\Model\Comment;
 use Framework\Core\AbstractController;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
@@ -14,23 +15,9 @@ final class BackController extends AbstractController
 {
     public function admin(): Response
     {
-        $articles = [
-            [
-                'title' => 'foo title',
-                'content' => 'foo content',
-                // TODO - replace this by a slugger
-                'slug' => 'foo-title',
-            ],
-            [
-                'title' => 'bar title',
-                'content' => 'bar content',
-                // TODO - replace this by a slugger
-                'slug' => 'bar-title',
-            ],
-        ];
-
         return $this->render('back/admin.html.twig', [
-            'articles' => $articles,
+            'articles' => $this->getRepository(Article::class)->findAll(),
+            'comments' => $this->getRepository(Comment::class)->findAll(),
         ]);
     }
 
@@ -60,21 +47,10 @@ final class BackController extends AbstractController
         $slug = $request->query->get('slug');
         // var_dump($request->query->get('slug'));
         // TODO - check if the slug exists in the article database table
-        /*
-        $article = $this->articleRepository->findBy([
-            'slug' => $slug,
-        ]);
-        if (!$article) {
-            throw new \Exception('There is no article with this slug');
+        $article = $this->getRepository(Article::class)->findOneBy(['slug' => 'title-eleven-updated']);
+        if (null === $article) {
+            throw new \Exception('Article not found');
         }
-        */
-        // TODO - if not, send an exception
-
-        $article = new Article();
-        $article->setId(11);
-        $article->setTitle('title');
-        $article->setChapo('chapo');
-        $article->setContent('content');
 
         $form = $this->createForm(new ArticleType(), $article);
         $form->handleRequest($request);
@@ -95,7 +71,6 @@ final class BackController extends AbstractController
 
         return $this->render('back/edit.html.twig', [
             'article' => $article,
-            'slug' => $slug,
             'form' => $form,
         ]);
     }

@@ -19,4 +19,17 @@
             <hr>
         {% endfor %}
     </div>
+
+    <div class="col-12">
+        <a href="{{ path('new_article') }}" class="btn btn-primary">Create new article</a>
+    </div>
+
+    <br>
+
+    <div class="col-12">
+        {% for comment in comments %}
+            <p>{{ comment.comment }}</p>
+            <hr>
+        {% endfor %}
+    </div>
 {% endblock %}

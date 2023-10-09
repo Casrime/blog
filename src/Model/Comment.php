@@ -9,7 +9,7 @@ use Framework\Database\Model\ModelInterface;
 final class Comment implements ModelInterface
 {
     private ?int $id = null;
-    private string $comment;
+    private ?string $comment = null;
     private ?Article $article = null;
 
     public function getId(): ?int
@@ -17,17 +17,17 @@ final class Comment implements ModelInterface
         return $this->id;
     }
 
-    public function setId(int $id): void
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
 
-    public function getComment(): string
+    public function getComment(): ?string
     {
         return $this->comment;
     }
 
-    public function setComment(string $comment): void
+    public function setComment(?string $comment): void
     {
         $this->comment = $comment;
     }
