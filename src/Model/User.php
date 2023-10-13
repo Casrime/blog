@@ -8,30 +8,30 @@ use Framework\Database\Model\ModelInterface;
 
 final class User implements ModelInterface
 {
-    private string $email;
-    private string $password;
+    private ?string $email = null;
+    private ?string $password = null;
 
     public function getId(): int
     {
         return 1;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): void
+    public function setEmail(?string $email): void
     {
         $this->email = $email;
     }
 
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): void
+    public function setPassword(?string $password): void
     {
         $this->password = $password;
     }
