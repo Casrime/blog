@@ -12,6 +12,7 @@ final class TextareaType extends AbstractType
             $this->generateOpenBlock().
             $this->getLabel().
             $this->getTextarea().
+            $this->getFirstError().
             $this->getHelpBlock().
             $this->generateCloseBlock()
         ;
@@ -19,9 +20,16 @@ final class TextareaType extends AbstractType
 
     public function getTextarea(): string
     {
+        // TODO - duplicate code here
+        if (0 < count($this->getErrors())) {
+            $class = $this->getClass().' is-invalid';
+        } else {
+            $class = $this->getClass();
+        }
+
         return '
             <textarea
-                class="'.$this->getClass().'"
+                class="'.$class.'"
                 id="'.$this->getName().'"
                 name="'.$this->getName().'"
                 '.$this->getHelp().'

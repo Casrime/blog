@@ -12,6 +12,7 @@ final class UrlType extends AbstractType
             $this->generateOpenBlock().
             $this->getLabel().
             $this->getInput().
+            $this->getFirstError().
             $this->getHelpBlock().
             $this->generateCloseBlock()
         ;
@@ -19,10 +20,17 @@ final class UrlType extends AbstractType
 
     public function getInput(): string
     {
+        // TODO - duplicate code here
+        if (0 < count($this->getErrors())) {
+            $class = $this->getClass().' is-invalid';
+        } else {
+            $class = $this->getClass();
+        }
+
         return '
             <input
                 type="'.$this->getType().'"
-                class="'.$this->getClass().'"
+                class="'.$class.'"
                 id="'.$this->getName().'"
                 name="'.$this->getName().'"
                 value="'.$this->getValue().'"

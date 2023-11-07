@@ -7,6 +7,8 @@ namespace App\Form;
 use Framework\Form\FormType;
 use Framework\Form\Type\TextareaType;
 use Framework\Form\Type\TextType;
+use Framework\Validator\Constraints\Length;
+use Framework\Validator\Constraints\NotBlank;
 
 final class ArticleType extends FormType
 {
@@ -14,16 +16,35 @@ final class ArticleType extends FormType
     {
         $this->fieldCollection
             ->add('title', TextType::class, [
+                'constraints' => [
+                    new NotBlank(),
+                    new Length(['min' => 3, 'max' => 255]),
+                ],
                 'label' => 'Titre',
+                'required' => true,
             ])
             ->add('chapo', TextType::class, [
+                'constraints' => [
+                    new NotBlank(),
+                    new Length(['min' => 3, 'max' => 255]),
+                ],
                 'label' => 'Chapô',
+                'required' => true,
             ])
             ->add('author', TextType::class, [
+                'constraints' => [
+                    new NotBlank(),
+                    new Length(['min' => 3, 'max' => 255]),
+                ],
                 'label' => 'Auteur',
+                'required' => true,
             ])
             ->add('content', TextareaType::class, [
+                'constraints' => [
+                    new NotBlank(),
+                ],
                 'label' => 'Contenu',
+                'required' => true,
             ])
         ;
     }
