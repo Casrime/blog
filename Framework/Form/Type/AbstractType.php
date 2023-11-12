@@ -9,6 +9,7 @@ abstract class AbstractType implements AbstractTypeInterface
     private string $name;
     private string $type;
     private array $options;
+    private array $errors = [];
 
     private ?string $value = null;
 
@@ -34,6 +35,25 @@ abstract class AbstractType implements AbstractTypeInterface
     public function getOptions(): array
     {
         return $this->options;
+    }
+
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
+
+    public function setErrors(array $errors): void
+    {
+        $this->errors = $errors;
+    }
+
+    public function getFirstError(): string
+    {
+        if (empty($this->errors)) {
+            return '';
+        }
+
+        return '<div class="invalid-feedback">'.$this->errors[0].'</div>';
     }
 
     public function setType(string $type): string

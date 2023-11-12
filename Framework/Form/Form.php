@@ -17,6 +17,7 @@ class Form implements FormInterface
     private string $method = 'POST';
     private Request $request;
     private ?ModelInterface $model = null;
+    private array $errors = [];
 
     public function __construct()
     {
@@ -106,8 +107,12 @@ class Form implements FormInterface
 
     public function isValid(): bool
     {
-        // TODO: Implement isValid() method.
-        // TODO: - add validation before or after setting data ?
+        $this->validate($this->fieldCollection->all());
+
+        if (!empty($this->errors)) {
+            return false;
+        }
+
         if (null !== $this->model) {
             $this->setData($this->fieldCollection->all());
         }
@@ -160,6 +165,32 @@ class Form implements FormInterface
                 /** @var AbstractType $abstractType */
                 $abstractType = $data[$attributeName];
                 $this->model->{'set'.ucfirst($attributeName)}($abstractType->getValue());
+            }
+        }
+    }
+
+    private function validate(array $fields): void
+    {
+        /** @var AbstractType $field */
+        foreach ($fields as $field) {
+            if (isset($field->getOptions()['constraints']) && !empty($field->getOptions()['constraints'])) {
+                foreach ($field->getOptions()['constraints'] as $constraint) {
+                    if ($constraint->validate($field->getValue())) {
+                        $this->errors[$field->getName()] = $constraint->message;
+                        // TODO - move this to a specific method named generateMessageRawError ?
+                        // Replace dynamic values in constraint message
+                        preg_replace_callback_array(
+                            [
+                                '/{{ {1}[a-z]* {1}}}/' => function ($match) use ($constraint) {
+                                    return $constraint->message = str_replace($match[0], (string) $constraint->{substr($match[0], 3, -3)}, $constraint->message);
+                                }
+                            ],
+                            $constraint->message
+                        );
+                        $field->setErrors([$constraint->message]);
+                        break;
+                    }
+                }
             }
         }
     }
