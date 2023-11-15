@@ -9,7 +9,7 @@ use Framework\Database\Model\ModelInterface;
 use PDO;
 use ReflectionClass;
 
-class ServiceRepository extends Database
+class ServiceRepository extends Database implements ServiceRepositoryInterface
 {
     protected function buildEntity(array $data): object
     {
@@ -32,12 +32,12 @@ class ServiceRepository extends Database
         return $entity;
     }
 
-    public function findAll()
+    public function findAll(): array
     {
         return $this->findBy([]);
     }
 
-    public function find(int $id)
+    public function find(int $id): ?ModelInterface
     {
         $tableName = (new ReflectionClass($this->getEntityName()))->getShortName();
         $query = $this->getConnection()->prepare('SELECT * FROM '.$tableName.' WHERE id = :id');
@@ -50,7 +50,7 @@ class ServiceRepository extends Database
     }
 
     // TODO - handle parameters
-    public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
+    public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null): array
     {
         $tableName = (new ReflectionClass($this->getEntityName()))->getShortName();
         $query = $this->getConnection()->prepare('SELECT * FROM '.$tableName);
@@ -66,7 +66,7 @@ class ServiceRepository extends Database
     }
 
     // TODO - handle parameters
-    public function findOneBy(array $criteria, array $orderBy = []): ?ModelInterface
+    public function findOneBy(array $criteria, ?array $orderBy = []): ?ModelInterface
     {
         $tableName = (new ReflectionClass($this->getEntityName()))->getShortName();
         $query = $this->getConnection()->prepare('SELECT * FROM '.$tableName.' WHERE '.array_keys($criteria)[0].' = :'.array_keys($criteria)[0]);

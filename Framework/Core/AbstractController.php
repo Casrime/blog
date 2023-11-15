@@ -7,12 +7,14 @@ namespace Framework\Core;
 use Framework\Database\Manager;
 use Framework\Database\Model\ModelInterface;
 use Framework\Database\ServiceRepository;
+use Framework\Database\ServiceRepositoryInterface;
 use Framework\Form\Form;
 use Framework\Form\FormInterface;
 use Framework\Form\FormTypeInterface;
 use Framework\HttpFoundation\RedirectResponse;
 use Framework\HttpFoundation\Response;
 use Framework\Routing\Router;
+use Framework\Security\Security;
 use Framework\Slugger\Slugger;
 use Framework\Twig\FormEnd;
 use Framework\Twig\FormRow;
@@ -29,6 +31,7 @@ abstract class AbstractController implements ControllerInterface
     private ServiceRepository $serviceRepository;
     protected Manager $manager;
     protected Slugger $slugger;
+    private Security $security;
 
     public function __construct()
     {
@@ -36,6 +39,7 @@ abstract class AbstractController implements ControllerInterface
         $this->serviceRepository = new ServiceRepository();
         $this->manager = new Manager();
         $this->slugger = new Slugger();
+        $this->security = new Security;
     }
 
     public function render(string $template, array $options = []): Response
@@ -51,6 +55,8 @@ abstract class AbstractController implements ControllerInterface
         $twig->addFunction((new FormStart())->renderView());
         $twig->addFunction((new FormEnd())->renderView());
         $twig->addFunction((new FormRow())->renderView());
+        // TODO - replace $_SESSION['user']
+        $twig->addGlobal('user', $_SESSION['user'] ?? null);
 
         return new Response($twig->render($template, $options));
     }
@@ -83,10 +89,15 @@ abstract class AbstractController implements ControllerInterface
         // TODO: Implement addFlash() method.
     }
 
-    protected function getRepository(string $entityName): ServiceRepository
+    protected function getRepository(string $entityName): ServiceRepositoryInterface
     {
         $this->serviceRepository->setEntityName($entityName);
 
         return $this->serviceRepository;
+    }
+
+    protected function getSecurity(): Security
+    {
+        return $this->security;
     }
 }

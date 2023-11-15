@@ -2,12 +2,15 @@
     <a class="btn btn-primary" href="{{ path('show_article', {
         slug: article.slug
     }) }}">Lire la suite</a>
-    <a class="btn btn-warning" href="{{ path('edit_article', {
-        slug: article.slug
-    }) }}">Modifier</a>
-    <!-- TODO - change this to a form with a DELETE method -->
-    <!-- TODO - add a confirmation modal -->
-    <a class="btn btn-danger" href="{{ path('delete_article', {
-        slug: article.slug
-    }) }}">Supprimer</a>
+
+    {% if 'ROLE_ADMIN' in user.roles %}
+        <a class="btn btn-warning" href="{{ path('edit_article', {
+            slug: article.slug
+        }) }}">Modifier</a>
+        <!-- TODO - change this to a form with a DELETE method -->
+        <!-- TODO - add a confirmation modal -->
+        <a class="btn btn-danger" href="{{ path('delete_article', {
+            slug: article.slug
+        }) }}">Supprimer</a>
+    {% endif %}
 </div>
