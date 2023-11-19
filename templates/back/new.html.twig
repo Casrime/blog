@@ -8,7 +8,9 @@
                     <h2>New article for the blog</h2>
                     <div class="my-5">
                         {{ include('_inc/_form.html.twig', {
-                            submit_value: 'Ajouter'
+                            btn_class: 'btn btn-primary',
+                            icon: 'fa fa-add',
+                            text: 'Ajouter'
                         }) }}
                     </div>
                 </div>

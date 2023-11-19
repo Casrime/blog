@@ -1,16 +1,31 @@
 <div class="actions">
-    <a class="btn btn-primary" href="{{ path('show_article', {
-        slug: article.slug
-    }) }}">Lire la suite</a>
+    {{ include('_inc/_link.html.twig', {
+        btn_class: 'btn btn-primary',
+        icon: 'fa fa-eye',
+        path: path('show_article', {
+            slug: article.slug
+        }),
+        text: 'Lire la suite'
+    }) }}
 
     {% if 'ROLE_ADMIN' in user.roles %}
-        <a class="btn btn-warning" href="{{ path('edit_article', {
-            slug: article.slug
-        }) }}">Modifier</a>
+        {{ include('_inc/_link.html.twig', {
+            btn_class: 'btn btn-warning',
+            icon: 'fa fa-edit',
+            path: path('edit_article', {
+                slug: article.slug
+            }),
+            text: 'Modifier'
+        }) }}
         <!-- TODO - change this to a form with a DELETE method -->
         <!-- TODO - add a confirmation modal -->
-        <a class="btn btn-danger" href="{{ path('delete_article', {
-            slug: article.slug
-        }) }}">Supprimer</a>
+        {{ include('_inc/_link.html.twig', {
+            btn_class: 'btn btn-danger',
+            icon: 'fa fa-trash',
+            path: path('delete_article', {
+                slug: article.slug
+            }),
+            text: 'Supprimer'
+        }) }}
     {% endif %}
 </div>

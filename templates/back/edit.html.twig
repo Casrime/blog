@@ -8,7 +8,9 @@
                     <h2>Edit article {{ article.title }} with slug : {{ article.slug }}</h2>
                     <div class="my-5">
                         {{ include('_inc/_form.html.twig', {
-                            submit_value: 'Mettre à jour'
+                            btn_class: 'btn btn-warning',
+                            icon: 'fa fa-check',
+                            text: 'Mettre à jour'
                         }) }}
                     </div>
                 </div>

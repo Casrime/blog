@@ -21,7 +21,12 @@
     </div>
 
     <div class="col-12">
-        <a href="{{ path('new_article') }}" class="btn btn-primary">Create new article</a>
+        {{ include('_inc/_link.html.twig', {
+            btn_class: 'btn btn-primary',
+            icon: 'fa fa-add',
+            path: path('new_article'),
+            text: 'Nouvel article',
+        }) }}
     </div>
 
     <br>
