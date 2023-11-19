@@ -6,11 +6,13 @@ namespace App\Controller;
 
 use App\Form\CommentType;
 use App\Form\ContactType;
-use App\Form\UserType;
+use App\Form\LoginType;
+use App\Form\RegisterType;
 use App\Model\Article;
 use App\Model\Comment;
 use App\Model\Contact;
 use App\Model\User;
+use App\Repository\UserRepository;
 use Framework\Core\AbstractController;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
@@ -80,13 +82,16 @@ final class FrontController extends AbstractController
 
     public function register(Request $request): Response
     {
-        $form = $this->createForm(new UserType(), new User());
+        $form = $this->createForm(new RegisterType(), new User());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $user */
             $user = $form->getData();
             // TODO - implement these methods
             // $user->isActive(false);
+            $user->setPassword($this->getSecurity()->hash($user->getPassword()));
+            $user->setRoles(['ROLE_USER']);
             $this->manager->persist($user);
             $this->manager->flush();
 
@@ -100,18 +105,36 @@ final class FrontController extends AbstractController
 
     public function login(Request $request): Response
     {
-        $form = $this->createForm(new UserType(), new User());
+        $form = $this->createForm(new LoginType(), new User());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
-            // TODO - check if email and password are valid and if user is active
+            $userRepository = new UserRepository();
 
-            return $this->redirectToRoute('login');
+            $existingUser = $userRepository->login($user);
+
+            if (null === $existingUser) {
+                $this->addFlash('error', 'Invalid credentials');
+
+                return $this->redirectToRoute('login');
+            }
+            // TODO - login the user
+            $this->getSecurity()->login($existingUser);
+
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('front/login.html.twig', [
             'form' => $form,
         ]);
+    }
+
+    // TODO - add logout
+    public function logout(Request $request): Response
+    {
+        $this->getSecurity()->logout();
+
+        return $this->redirectToRoute('home');
     }
 }

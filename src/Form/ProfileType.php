@@ -12,6 +12,7 @@ use Framework\Form\Type\UrlType;
 use Framework\Validator\Constraints\Email;
 use Framework\Validator\Constraints\Length;
 use Framework\Validator\Constraints\NotBlank;
+use Framework\Validator\Constraints\Url;
 
 final class ProfileType extends FormType
 {
@@ -47,6 +48,7 @@ final class ProfileType extends FormType
             ->add('cv', UrlType::class, [
                 'constraints' => [
                     new NotBlank(),
+                    new Url(),
                 ],
                 'label' => 'CV',
                 'required' => true,
@@ -54,6 +56,7 @@ final class ProfileType extends FormType
             ->add('github', UrlType::class, [
                 'constraints' => [
                     new NotBlank(),
+                    new Url(),
                 ],
                 'label' => 'GitHub',
                 'required' => true,
@@ -61,6 +64,7 @@ final class ProfileType extends FormType
             ->add('linkedin', UrlType::class, [
                 'constraints' => [
                     new NotBlank(),
+                    new Url(),
                 ],
                 'label' => 'LinkedIn',
                 'required' => true,
@@ -68,6 +72,7 @@ final class ProfileType extends FormType
             ->add('twitter', UrlType::class, [
                 'constraints' => [
                     new NotBlank(),
+                    new Url(),
                 ],
                 'label' => 'Twitter',
             ])

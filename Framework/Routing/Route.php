@@ -21,6 +21,7 @@ class Route
          * @var array<string>
          */
         private array $arguments = [],
+        private ?string $role = null,
     ) {
     }
 
@@ -119,6 +120,11 @@ class Route
         $currentRequestWithoutPrefix = substr($currentRequest, strlen($prefix));
 
         return str_replace($pathWithoutPrefix, '/'.$currentRequestWithoutPrefix, $pathWithoutPrefix);
+    }
+
+    public function getRole(): ?string
+    {
+        return $this->role;
     }
 
     public function removeSpecialChars(string $parameter): string

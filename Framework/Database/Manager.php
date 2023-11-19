@@ -40,6 +40,10 @@ class Manager extends Database
                 $columns[] = $propertyName;
                 $prepareParams[] = '?';
                 $values[] = $property->getValue($entity)->format('Y-m-d H:i:s');
+            } elseif ('array' === $property->getType()->getName()) {
+                $columns[] = $propertyName;
+                $prepareParams[] = '?';
+                $values[] = json_encode($property->getValue($entity));
             } elseif ('array' !== $property->getType()->getName() && null !== $property->getValue($entity)){
                 $columns[] = $propertyName;
                 $prepareParams[] = '?';
