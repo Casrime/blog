@@ -56,7 +56,9 @@ final class FrontController extends AbstractController
         var_dump($slug);
 
         /** @var Article $article */
-        $article = $this->getRepository(Article::class)->findOneBy(['slug' => 'title-updated']);
+        $article = $this->getRepository(Article::class)->findOneBy(['slug' => $slug]);
+        var_dump($article);
+        die;
         if (null === $article) {
             throw new \Exception('Article not found');
         }

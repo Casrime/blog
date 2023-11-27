@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use Framework\Database\ArrayCollection;
+use Framework\Database\CollectionInterface;
 use Framework\Database\Model\ModelInterface;
 
 final class Article implements ModelInterface
@@ -12,15 +14,15 @@ final class Article implements ModelInterface
     private ?string $title = null;
     private string $slug;
     private ?string $chapo = null;
-    // TODO - change this to be a relation
-    //private string $author;
+    private ?User $user = null;
     private ?string $content = null;
     private \DateTime $createdAt;
     private ?\DateTime $updatedAt = null;
-    private array $comments = [];
+    private CollectionInterface $comments;
 
     public function __construct()
     {
+        $this->comments = new ArrayCollection();
         $this->createdAt = new \DateTime();
     }
 
@@ -64,14 +66,14 @@ final class Article implements ModelInterface
         $this->chapo = $chapo;
     }
 
-    public function getAuthor(): string
+    public function getUser(): ?User
     {
-        return 'author';
+        return $this->user;
     }
 
-    public function setAuthor(string $author): void
+    public function setUser(?User $user): void
     {
-        $this->author = $author;
+        $this->user = $user;
     }
 
     public function getContent(): ?string
@@ -106,17 +108,17 @@ final class Article implements ModelInterface
 
     public function getComments(): array
     {
-        return $this->comments;
+        return $this->comments->getModels();
     }
 
     public function addComment(Comment $comment): void
     {
-        $this->comments[] = $comment;
+        $this->comments->add($comment);
     }
 
     public function removeComment(Comment $comment): void
     {
-        $key = array_search($comment, $this->comments);
+        $key = array_search($comment, $this->comments->getModels());
         if (false !== $key) {
             unset($this->comments[$key]);
         }

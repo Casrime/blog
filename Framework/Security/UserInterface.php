@@ -6,4 +6,7 @@ namespace Framework\Security;
 
 interface UserInterface
 {
+    public function getEmail(): ?string;
+
+    public function getRoles(): array;
 }

@@ -31,14 +31,6 @@ final class ArticleType extends FormType
                 'label' => 'Chapô',
                 'required' => true,
             ])
-            ->add('author', TextType::class, [
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['min' => 3, 'max' => 255]),
-                ],
-                'label' => 'Auteur',
-                'required' => true,
-            ])
             ->add('content', TextareaType::class, [
                 'constraints' => [
                     new NotBlank(),

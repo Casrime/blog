@@ -33,6 +33,7 @@ final class BackController extends AbstractController
             $slugger = $this->getContainer()->get('slugger');
             /** @var Article $article */
             $article = $form->getData();
+            $article->setUser($request->session->get('user'));
             $article->setSlug($slugger->slug($article->getTitle()));
 
             /** @var ManagerInterface $manager */
@@ -51,9 +52,8 @@ final class BackController extends AbstractController
     public function editArticle(Request $request): Response
     {
         $slug = $request->query->get('slug');
-        // var_dump($request->query->get('slug'));
         // TODO - check if the slug exists in the article database table
-        $article = $this->getRepository(Article::class)->findOneBy(['slug' => 'title-eleven-updated']);
+        $article = $this->getRepository(Article::class)->findOneBy(['slug' => $slug]);
         if (null === $article) {
             throw new \Exception('Article not found');
         }

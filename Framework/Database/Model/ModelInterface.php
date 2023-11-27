@@ -6,4 +6,5 @@ namespace Framework\Database\Model;
 
 interface ModelInterface
 {
+    public function getId(): ?int;
 }

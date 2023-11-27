@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Framework\Routing;
 
 use Framework\HttpFoundation\Request;
+use Framework\Slugger\Slugger;
 
 class Router
 {
@@ -48,6 +49,13 @@ class Router
 
         // Push the current route arguments into the Request object
         foreach ($this->currentRoute->getArguments() as $key => $value) {
+            if (str_starts_with($value, '/')) {
+                $value = substr($value, 1);
+            }
+            // TODO - use slugger to convert special chars
+            $slugger = new Slugger();
+            $value = $slugger->slug($value);
+            var_dump($value);
             $request->query->set($key, $value);
         }
 

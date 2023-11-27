@@ -37,10 +37,14 @@ final class UserRepository extends ServiceRepository
         ]);
 
         $result = $query->fetch();
+        if (false === $result) {
+            return null;
+        }
 
         if ($this->security->verify($user->getPassword(), $result['password'])) {
             // TODO - add method to hydrate user
             $user = new User();
+            $user->setId($result['id']);
             $user->setRoles(json_decode($result['roles']));
             $user->setEmail($result['email']);
             //$user->setActive($result['active']);

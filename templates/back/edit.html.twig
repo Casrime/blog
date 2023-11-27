@@ -12,6 +12,15 @@
                             icon: 'fa fa-check',
                             text: 'Mettre à jour'
                         }) }}
+
+                        {{ include('_inc/_link.html.twig', {
+                            btn_class: 'btn btn-danger',
+                            icon: 'fa fa-trash',
+                            path: path('delete_article', {
+                                slug: article.slug
+                            }),
+                            text: 'Supprimer'
+                        }) }}
                     </div>
                 </div>
             </div>
