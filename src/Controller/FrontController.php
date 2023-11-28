@@ -53,12 +53,9 @@ final class FrontController extends AbstractController
     {
         // TODO - use the slug, check the value is correct first
         $slug = $request->query->get('slug');
-        var_dump($slug);
 
         /** @var Article $article */
         $article = $this->getRepository(Article::class)->findOneBy(['slug' => $slug]);
-        var_dump($article);
-        die;
         if (null === $article) {
             throw new \Exception('Article not found');
         }

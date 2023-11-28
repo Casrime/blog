@@ -32,8 +32,8 @@ final class ServiceContainer
             return new Manager();
         });
 
-        $container->register('router', function () {
-            return new Router();
+        $container->register('router', function () use ($container) {
+            return new Router($container);
         });
 
         $container->register('security', function () {
