@@ -12,7 +12,12 @@ class Router
     private ?Route $currentRoute = null;
     private RouteCollection $routes;
 
-    public function loadRoutes(): RouteCollection
+    public function __construct()
+    {
+        $this->routes = $this->loadRoutes();
+    }
+
+    private function loadRoutes(): RouteCollection
     {
         $this->routes = include '../config/routes.php';
 
@@ -90,5 +95,10 @@ class Router
         preg_match('/\/{[a-zA-Z0-9-_]*}/', $route->getPath(), $matches);
 
         return $matches;
+    }
+
+    public function getRoutes(): RouteCollection
+    {
+        return $this->routes;
     }
 }

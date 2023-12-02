@@ -8,8 +8,10 @@ use App\Form\ArticleType;
 use App\Model\Article;
 use App\Model\Comment;
 use Framework\Core\AbstractController;
+use Framework\Database\ManagerInterface;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
+use Framework\Slugger\SluggerInterface;
 
 final class BackController extends AbstractController
 {
@@ -27,12 +29,16 @@ final class BackController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var SluggerInterface $slugger */
+            $slugger = $this->getContainer()->get('slugger');
             /** @var Article $article */
             $article = $form->getData();
-            $article->setSlug($this->slugger->slug($article->getTitle()));
+            $article->setSlug($slugger->slug($article->getTitle()));
 
-            $this->manager->persist($article);
-            $this->manager->flush();
+            /** @var ManagerInterface $manager */
+            $manager = $this->getContainer()->get('manager');
+            $manager->persist($article);
+            $manager->flush();
 
             return $this->redirectToRoute('admin');
         }
@@ -56,13 +62,17 @@ final class BackController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var SluggerInterface $slugger */
+            $slugger = $this->getContainer()->get('slugger');
             /** @var Article $article */
             $article = $form->getData();
-            $article->setSlug($this->slugger->slug($article->getTitle()));
+            $article->setSlug($slugger->slug($article->getTitle()));
             $article->setUpdatedAt(new \DateTime());
 
-            $this->manager->persist($article);
-            $this->manager->flush();
+            /** @var ManagerInterface $manager */
+            $manager = $this->getContainer()->get('manager');
+            $manager->persist($article);
+            $manager->flush();
 
             return $this->redirectToRoute('show_article', [
                 'slug' => $slug,

@@ -6,7 +6,7 @@ namespace Framework\Database;
 
 use Framework\Database\Model\ModelInterface;
 
-class Manager extends Database
+class Manager extends Database implements ManagerInterface
 {
     public function persist(object $entity): void
     {
