@@ -14,8 +14,10 @@ use App\Model\Contact;
 use App\Model\User;
 use App\Repository\UserRepository;
 use Framework\Core\AbstractController;
+use Framework\Database\ManagerInterface;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
+use Framework\Security\Security;
 
 final class FrontController extends AbstractController
 {
@@ -66,8 +68,10 @@ final class FrontController extends AbstractController
             $comment = $form->getData();
             $comment->setArticle($article);
 
-            $this->manager->persist($comment);
-            $this->manager->flush();
+            /** @var ManagerInterface $manager */
+            $manager = $this->getContainer()->get('manager');
+            $manager->persist($comment);
+            $manager->flush();
 
             return $this->redirectToRoute('show_article', [
                 'slug' => $slug,
@@ -90,10 +94,14 @@ final class FrontController extends AbstractController
             $user = $form->getData();
             // TODO - implement these methods
             // $user->isActive(false);
-            $user->setPassword($this->getSecurity()->hash($user->getPassword()));
+            /** @var Security $security */
+            $security = $this->getContainer()->get('security');
+            $user->setPassword($security->hash($user->getPassword()));
             $user->setRoles(['ROLE_USER']);
-            $this->manager->persist($user);
-            $this->manager->flush();
+            /** @var ManagerInterface $manager */
+            $manager = $this->getContainer()->get('manager');
+            $manager->persist($user);
+            $manager->flush();
 
             return $this->redirectToRoute('register');
         }
@@ -120,7 +128,9 @@ final class FrontController extends AbstractController
                 return $this->redirectToRoute('login');
             }
             // TODO - login the user
-            $this->getSecurity()->login($existingUser);
+            /** @var Security $security */
+            $security = $this->getContainer()->get('security');
+            $security->login($existingUser);
 
             return $this->redirectToRoute('home');
         }
@@ -133,7 +143,9 @@ final class FrontController extends AbstractController
     // TODO - add logout
     public function logout(Request $request): Response
     {
-        $this->getSecurity()->logout();
+        /** @var Security $security */
+        $security = $this->getContainer()->get('security');
+        $security->logout();
 
         return $this->redirectToRoute('home');
     }

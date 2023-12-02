@@ -4,66 +4,34 @@ declare(strict_types=1);
 
 namespace Framework\Core;
 
-use Framework\Database\Manager;
 use Framework\Database\Model\ModelInterface;
-use Framework\Database\ServiceRepository;
 use Framework\Database\ServiceRepositoryInterface;
-use Framework\Form\Form;
 use Framework\Form\FormInterface;
 use Framework\Form\FormTypeInterface;
 use Framework\HttpFoundation\RedirectResponse;
 use Framework\HttpFoundation\Response;
 use Framework\Routing\Router;
-use Framework\Security\Security;
-use Framework\Slugger\Slugger;
-use Framework\Twig\FormEnd;
-use Framework\Twig\FormRow;
-use Framework\Twig\FormStart;
-use Framework\Twig\FormView;
-use Framework\Twig\Path;
-use Twig\Environment;
-use Twig\Extension\DebugExtension;
-use Twig\Loader\FilesystemLoader;
 
 abstract class AbstractController implements ControllerInterface
 {
-    private Router $router;
-    private ServiceRepository $serviceRepository;
-    protected Manager $manager;
-    protected Slugger $slugger;
-    private Security $security;
+    private ContainerInterface $container;
 
-    public function __construct()
+    public function __construct(ContainerInterface $container)
     {
-        $this->router = new Router();
-        $this->serviceRepository = new ServiceRepository();
-        $this->manager = new Manager();
-        $this->slugger = new Slugger();
-        $this->security = new Security;
+        $this->container = $container;
     }
 
     public function render(string $template, array $options = []): Response
     {
-        $loader = new FilesystemLoader('../templates');
-        $twig = new Environment($loader, [
-            // 'cache' => '/path/to/compilation_cache',
-            'debug' => true,
-        ]);
-        $twig->addExtension(new DebugExtension());
-        $twig->addFunction((new Path())->path());
-        $twig->addFunction((new FormView())->renderView());
-        $twig->addFunction((new FormStart())->renderView());
-        $twig->addFunction((new FormEnd())->renderView());
-        $twig->addFunction((new FormRow())->renderView());
-        // TODO - replace $_SESSION['user']
-        $twig->addGlobal('user', $_SESSION['user'] ?? null);
+        $twig = $this->container->get('twig');
 
         return new Response($twig->render($template, $options));
     }
 
     protected function createForm(FormTypeInterface $formType, ?ModelInterface $model = null): FormInterface
     {
-        $form = new Form();
+        /** @var FormInterface $form */
+        $form = $this->container->get('form');
         $form->createForm($formType, $model);
 
         return $form;
@@ -71,8 +39,9 @@ abstract class AbstractController implements ControllerInterface
 
     protected function redirectToRoute(string $name, array $options = []): RedirectResponse
     {
-        // TODO - replace this by RouteInterface
-        foreach ($this->router->loadRoutes()->all() as $route) {
+        /** @var Router $router */
+        $router = $this->container->get('router');
+        foreach ($router->getRoutes()->all() as $route) {
             if ($name === $route->getName()) {
                 var_dump($options);
                 $route->setArguments($options);
@@ -91,13 +60,15 @@ abstract class AbstractController implements ControllerInterface
 
     protected function getRepository(string $entityName): ServiceRepositoryInterface
     {
-        $this->serviceRepository->setEntityName($entityName);
+        /** @var ServiceRepositoryInterface $serviceRepository */
+        $serviceRepository = $this->getContainer()->get('service_repository');
+        $serviceRepository->setEntityName($entityName);
 
-        return $this->serviceRepository;
+        return $serviceRepository;
     }
 
-    protected function getSecurity(): Security
+    protected function getContainer(): ContainerInterface
     {
-        return $this->security;
+        return $this->container;
     }
 }

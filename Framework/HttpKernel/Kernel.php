@@ -5,37 +5,33 @@ declare(strict_types=1);
 namespace Framework\HttpKernel;
 
 use Framework\Core\AbstractController;
+use Framework\Core\ContainerInterface;
+use Framework\Core\ServiceContainer;
 use Framework\HttpFoundation\RedirectResponse;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
-use Framework\Routing\Route;
-use Framework\Routing\Router;
 
 final class Kernel implements KernelInterface
 {
-    private Router $router;
-
-    public function __construct()
-    {
-        $this->router = new Router();
-    }
+    private ContainerInterface $container;
 
     public function handle(Request $request): Response
     {
-        $this->router->loadRoutes();
+        $this->container = (new ServiceContainer())->registerContainer();
 
         try {
             return $this->handleRaw($request);
         } catch (\Exception $exception) {
             // TODO - remove this var_dump
             var_dump($exception->getMessage());
+            // TODO - get twig instance from the container
             return new Response('error');
         }
     }
 
     private function handleRaw(Request $request)
     {
-        $currentRoute = $this->router->match($request);
+        $currentRoute = $this->container->get('router')->match($request);
         $user = $request->session->get('user');
         if (null === $user && null !== $currentRoute->getRole()) {
             // TODO - handle /login url if not exists
@@ -59,7 +55,7 @@ final class Kernel implements KernelInterface
         }
         // var_dump(class_exists($controllerFQN));
         $controllerMethod = $controller[1];
-        $instantiateController = new $controllerFQN();
+        $instantiateController = new $controllerFQN($this->container);
         if (!$instantiateController instanceof AbstractController) {
             var_dump('not instance of AbstractController');
         }
