@@ -13,7 +13,9 @@
                     <p>Mis à jour le : {{ article.updatedAt|date('d/m/Y') }} par {{ article.author }}</p>
 
                     {{ include('_inc/_form.html.twig', {
-                        submit_value: 'Ajouter'
+                        btn_class: 'btn btn-primary',
+                        icon: 'fa fa-add',
+                        text: 'Ajouter',
                     }) }}
 
                     <hr class="my-4" />

@@ -8,7 +8,9 @@
                     <h2>Connexion</h2>
                     <div class="my-5">
                         {{ include('_inc/_form.html.twig', {
-                            submit_value: 'Se connecter'
+                            btn_class: 'btn btn-primary',
+                            icon: 'fa-solid fa-lock-open',
+                            text: 'Se connecter'
                         }) }}
                     </div>
                 </div>
