@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Framework\Routing;
 
 use Framework\Core\ContainerInterface;
+use Framework\Exception\GenericException;
+use Framework\Exception\NotFoundException;
 use Framework\HttpFoundation\Request;
-use Framework\Slugger\Slugger;
 use Framework\Slugger\SluggerInterface;
 
 class Router
@@ -46,9 +47,7 @@ class Router
         $this->handleRoutes($request);
 
         if (null === $this->currentRoute) {
-            // TODO - Convert an exception to a response object
-            // TODO - add informations about the error
-            throw new \Exception('Route not found');
+            throw new NotFoundException('Route not found');
         }
 
         // Push the current route arguments into the Request object
@@ -94,8 +93,7 @@ class Router
                 // Check if HTTP method is allowed or not
                 $requestMethod = $request->getDataFromServer('request_method');
                 if (false === in_array($requestMethod, $this->currentRoute->getMethods())) {
-                    // TODO - send the status code 405 and the method name allowed for this route, and the current route methode used
-                    throw new \Exception('This route does not allowed this method');
+                    throw new GenericException('This route does not allowed this method', 405);
                 }
             }
         }

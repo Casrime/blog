@@ -3,6 +3,7 @@
 namespace Framework\Database;
 
 use Exception;
+use Framework\Exception\GenericException;
 use PDO;
 
 abstract class Database
@@ -16,17 +17,12 @@ abstract class Database
 
     public function getConnection()
     {
-        //Tentative de connexion à la base de données
-        try{
+        try {
             $connection = new PDO(self::DB_HOST, self::DB_USER, self::DB_PASS);
             $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            //On renvoie la connexion
             return $connection;
-        }
-            //On lève une erreur si la connexion échoue
-        catch(Exception $errorConnection)
-        {
-            die ('Erreur de connection :'.$errorConnection->getMessage());
+        } catch(Exception $errorConnection) {
+            throw new GenericException('Connection error :'.$errorConnection->getMessage());
         }
     }
 
@@ -42,7 +38,7 @@ abstract class Database
         try {
             $this->statement->execute($this->params);
         } catch (Exception $exception) {
-            die('Erreur : ' . $exception->getMessage());
+            throw new GenericException('Error : ' . $exception->getMessage());
         }
         // TODO - close cursor
         //$this->statement->closeCursor();

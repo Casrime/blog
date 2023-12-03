@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Framework\Core;
 
+use Framework\Exception\GenericException;
+
 final class Container implements ContainerInterface
 {
     private array $services = [];
@@ -14,7 +16,7 @@ final class Container implements ContainerInterface
             $callback = $this->services[$serviceName];
             return $callback();
         }
-        throw new \Exception("Service not registered: $serviceName");
+        throw new GenericException("Service not registered: $serviceName");
     }
 
     public function has(string $serviceName): bool
