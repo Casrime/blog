@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Framework\Twig;
 
 use Framework\Core\ContainerInterface;
+use Framework\Exception\GenericException;
 use Framework\Routing\Router;
 use Twig\TwigFunction;
 
@@ -40,7 +41,7 @@ final class Path implements PathInterface
                     $route->updatePath();
 
                     if (0 < count($router->matchRegex($route))) {
-                        throw new \Exception(sprintf('missing parameter : %s', $route->removeSpecialChars($router->matchRegex($route)[0])));
+                        throw new GenericException(sprintf('missing parameter : %s', $route->removeSpecialChars($router->matchRegex($route)[0])));
                     }
 
                     $path = $route->getPath();
@@ -51,7 +52,7 @@ final class Path implements PathInterface
                     return $path;
                 }
             }
-            throw new \Exception(sprintf('No route found with the name %s', $value));
+            throw new GenericException(sprintf('No route found with the name %s', $value));
         });
     }
 }

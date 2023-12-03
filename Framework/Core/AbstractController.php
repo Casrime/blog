@@ -6,6 +6,7 @@ namespace Framework\Core;
 
 use Framework\Database\Model\ModelInterface;
 use Framework\Database\ServiceRepositoryInterface;
+use Framework\Exception\NotFoundException;
 use Framework\Form\FormInterface;
 use Framework\Form\FormTypeInterface;
 use Framework\HttpFoundation\RedirectResponse;
@@ -54,7 +55,7 @@ abstract class AbstractController implements ControllerInterface
                 return new RedirectResponse($route->getPath(), 302, $options);
             }
         }
-        throw new \Exception('Route not found');
+        throw new NotFoundException('Route not found');
     }
 
     protected function addFlash(string $key, string $message): void

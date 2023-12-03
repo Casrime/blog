@@ -15,6 +15,7 @@ use App\Model\User;
 use App\Repository\UserRepository;
 use Framework\Core\AbstractController;
 use Framework\Database\ManagerInterface;
+use Framework\Exception\NotFoundException;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
 use Framework\Security\Security;
@@ -57,7 +58,7 @@ final class FrontController extends AbstractController
         /** @var Article $article */
         $article = $this->getRepository(Article::class)->findOneBy(['slug' => $slug]);
         if (null === $article) {
-            throw new \Exception('Article not found');
+            throw new NotFoundException('Article not found');
         }
 
         $form = $this->createForm(new CommentType(), new Comment());

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Framework\HttpFoundation;
 
+use Framework\Exception\GenericException;
+
 class Request
 {
     public Parameter $query;
@@ -21,7 +23,7 @@ class Request
     }
 
     /**
-     * @throws \Exception
+     * @throws GenericException
      *
      * Provides server value in lowercase, like request_uri
      * THis will return REQUEST_URI
@@ -29,8 +31,7 @@ class Request
     public function getDataFromServer(string $value): mixed
     {
         if (!$this->server->has(strtoupper($value))) {
-            // TODO - Create Server Exception
-            throw new \Exception(sprintf('This server parameter does not exists : %s', $value));
+            throw new GenericException(sprintf('This server parameter does not exists : %s', $value));
         }
 
         return $this->server->get(strtoupper($value));

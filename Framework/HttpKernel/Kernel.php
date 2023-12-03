@@ -7,9 +7,13 @@ namespace Framework\HttpKernel;
 use Framework\Core\AbstractController;
 use Framework\Core\ContainerInterface;
 use Framework\Core\ServiceContainer;
+use Framework\Exception\AccessDeniedException;
+use Framework\Exception\GenericException;
 use Framework\HttpFoundation\RedirectResponse;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 final class Kernel implements KernelInterface
 {
@@ -22,10 +26,7 @@ final class Kernel implements KernelInterface
         try {
             return $this->handleRaw($request);
         } catch (\Exception $exception) {
-            // TODO - remove this var_dump
-            var_dump($exception->getMessage());
-            // TODO - get twig instance from the container
-            return new Response('error');
+            return $this->handleException($exception);
         }
     }
 
@@ -39,19 +40,19 @@ final class Kernel implements KernelInterface
         }
 
         if (null !== $currentRoute->getRole() && !in_array($currentRoute->getRole(), $user->getRoles())) {
-            throw new \Exception('You are not allowed to access this page');
+            throw new AccessDeniedException('You are not allowed to access this page');
         }
 
         // Try to get the controller
         // TODO - check the currentRoute has mandatory parameters like :
         $controller = $currentRoute->getController();
         if (2 !== count($controller)) {
-            throw new \Exception('The controller parameter should have two values');
+            throw new GenericException('The controller parameter should have two values');
         }
 
         $controllerFQN = $controller[0];
         if (!class_exists($controllerFQN)) {
-            throw new \Exception(sprintf('The %s parameter is not a class we can instantiate ', $controllerFQN));
+            throw new GenericException(sprintf('The %s parameter is not a class we can instantiate', $controllerFQN));
         }
         // var_dump(class_exists($controllerFQN));
         $controllerMethod = $controller[1];
@@ -70,5 +71,25 @@ final class Kernel implements KernelInterface
         }
 
         return $instantiateController->$controllerMethod($request);
+    }
+
+    private function handleException(\Exception $exception)
+    {
+        /** @var Environment $twig */
+        $twig = $this->container->get('twig');
+        $loader = new FilesystemLoader('../Framework/Error');
+        $twig->setLoader($loader);
+
+        if (404 === $exception->getCode()) {
+            $message = 'Page non trouvée';
+        } elseif (403 === $exception->getCode()) {
+            $message = 'Accès refusé';
+        } else {
+            $message = 'Erreur interne';
+        }
+
+        return new Response($twig->render('error.html.twig', [
+            'message' => $message,
+        ]), $exception->getCode());
     }
 }
