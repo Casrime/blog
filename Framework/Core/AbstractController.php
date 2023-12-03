@@ -43,8 +43,12 @@ abstract class AbstractController implements ControllerInterface
         $router = $this->container->get('router');
         foreach ($router->getRoutes()->all() as $route) {
             if ($name === $route->getName()) {
-                var_dump($options);
-                $route->setArguments($options);
+                foreach ($options as $key => $value) {
+                    if ('slug' === $key) {
+                        $value = '/'.$value;
+                    }
+                    $route->setArgument($key, $value);
+                }
                 $route->updatePath();
 
                 return new RedirectResponse($route->getPath(), 302, $options);

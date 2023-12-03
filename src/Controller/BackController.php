@@ -80,7 +80,7 @@ final class BackController extends AbstractController
             $manager->flush();
 
             return $this->redirectToRoute('show_article', [
-                'slug' => $slug,
+                'slug' => $article->getSlug(),
             ]);
         }
 
