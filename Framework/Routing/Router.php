@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace Framework\Routing;
 
+use Framework\Core\ContainerInterface;
 use Framework\HttpFoundation\Request;
+use Framework\Slugger\Slugger;
+use Framework\Slugger\SluggerInterface;
 
 class Router
 {
     public string $currentRequestUri = '';
     private ?Route $currentRoute = null;
     private RouteCollection $routes;
+    private ContainerInterface $container;
 
-    public function __construct()
+    public function __construct(ContainerInterface $container)
     {
         $this->routes = $this->loadRoutes();
+        $this->container = $container;
     }
 
     private function loadRoutes(): RouteCollection
@@ -48,6 +53,12 @@ class Router
 
         // Push the current route arguments into the Request object
         foreach ($this->currentRoute->getArguments() as $key => $value) {
+            if (str_starts_with($value, '/')) {
+                $value = substr($value, 1);
+            }
+            /** @var SluggerInterface $slugger */
+            $slugger = $this->container->get('slugger');
+            $value = $slugger->slug($value);
             $request->query->set($key, $value);
         }
 

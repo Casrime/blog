@@ -32,7 +32,9 @@ class Manager extends Database implements ManagerInterface
         $values = [];
         foreach ($properties as $property) {
             $propertyName = $property->getName();
-            if ($property->getValue($entity) instanceof ModelInterface) {
+            if ($property->getType()->getName() === 'Framework\Database\CollectionInterface') {
+                continue;
+            } elseif ($property->getValue($entity) instanceof ModelInterface) {
                 $columns[] = $propertyName.'_id';
                 $prepareParams[] = '?';
                 $values[] = $property->getValue($entity)->getId();
@@ -65,7 +67,9 @@ class Manager extends Database implements ManagerInterface
         $values = [];
         foreach ($properties as $property) {
             $propertyName = $property->getName();
-            if ($property->getValue($entity) instanceof ModelInterface) {
+            if ($property->getType()->getName() === 'Framework\Database\CollectionInterface') {
+                continue;
+            } elseif ($property->getValue($entity) instanceof ModelInterface) {
                 // TODO - do weed need to change this here ?
                 $columns[] = $propertyName.'_id';
                 $values[] = $property->getValue($entity)->getId();
