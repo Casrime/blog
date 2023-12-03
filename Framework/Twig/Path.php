@@ -15,7 +15,6 @@ final class Path implements PathInterface
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->path();
     }
 
     public function path(): TwigFunction
