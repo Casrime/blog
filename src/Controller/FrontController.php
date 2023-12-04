@@ -18,6 +18,8 @@ use Framework\Database\ManagerInterface;
 use Framework\Exception\NotFoundException;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
+use Framework\Mailer\Email;
+use Framework\Mailer\MailerInterface;
 use Framework\Security\Security;
 
 final class FrontController extends AbstractController
@@ -30,8 +32,15 @@ final class FrontController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Contact $contact */
             $contact = $form->getData();
-            // TODO - implement Mailer interface
-            // $this->mailer->send($contact);
+            /** @var MailerInterface $mailer */
+            $mailer = $this->getContainer()->get('mailer');
+            $email = new Email($contact->getEmail(), 'abdounikarim@gmail.com', 'Contact', 'mail.html.twig', [
+                'lastname' => $contact->getLastname(),
+                'firstname' => $contact->getFirstname(),
+                'email' => $contact->getEmail(),
+                'message' => $contact->getMessage(),
+            ]);
+            $mailer->send($email);
             $this->addFlash('success', 'Email envoyé');
 
             return $this->redirectToRoute('home');
