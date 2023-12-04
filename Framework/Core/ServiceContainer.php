@@ -7,6 +7,7 @@ namespace Framework\Core;
 use Framework\Database\Manager;
 use Framework\Database\ServiceRepository;
 use Framework\Form\Form;
+use Framework\Mailer\Mailer;
 use Framework\Routing\Router;
 use Framework\Security\Security;
 use Framework\Slugger\Slugger;
@@ -26,6 +27,13 @@ final class ServiceContainer
         $container = new Container();
         $container->register('form', function () {
             return new Form();
+        });
+
+        $container->register('mailer', function () use ($container) {
+            /** @var Environment $twig */
+            $twig = $container->get('twig');
+
+            return new Mailer($twig);
         });
 
         $container->register('manager', function () {
