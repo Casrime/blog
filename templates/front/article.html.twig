@@ -1,37 +1,29 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout.html.twig' %}
 
-{% block body %}
-    <article class="mb-4">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                    <h2>{{ article.title }}</h2>
-                    <h3>{{ article.chapo }}</h3>
-                    <p>{{ article.content }}</p>
+{% block layout %}
+    <h2>{{ article.title }}</h2>
+    <h3>{{ article.chapo }}</h3>
+    <p>{{ article.content }}</p>
 
-                    <hr>
-                    <p>Mis à jour le : {{ article.updatedAt|date('d/m/Y') }} par {{ article.user.email }}</p>
-                    <p>Créé le : {{ article.createdAt|date('d/m/Y') }} par {{ article.user.email }}</p>
+    <hr>
+    <p>Mis à jour le : {{ article.updatedAt|date('d/m/Y') }} par {{ article.user.email }}</p>
+    <p>Créé le : {{ article.createdAt|date('d/m/Y') }} par {{ article.user.email }}</p>
 
-                    {{ include('_inc/_form.html.twig', {
-                        btn_class: 'btn btn-primary',
-                        icon: 'fa fa-add',
-                        text: 'Ajouter',
-                    }) }}
+    {{ include('_inc/_form.html.twig', {
+        btn_class: 'btn btn-primary',
+        icon: 'fa fa-add',
+        text: 'Ajouter',
+    }) }}
 
-                    <hr class="my-4" />
+    <hr class="my-4" />
 
-                    <div id="comments">
-                        <h2>Commentaires</h2>
-                        {% for comment in article.comments %}
-                            <div class="comment">
-                                {{ comment.comment }}
-                                <hr>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
+    <div id="comments">
+        <h2>Commentaires</h2>
+        {% for comment in article.comments %}
+            <div class="comment">
+                {{ comment.comment }}
+                <hr>
             </div>
-        </div>
-    </article>
+        {% endfor %}
+    </div>
 {% endblock %}

@@ -1,29 +1,21 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout.html.twig' %}
 
-{% block body %}
-    <main class="mb-4">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                    <h2>Edit article {{ article.title }} with slug : {{ article.slug }}</h2>
-                    <div class="my-5">
-                        {{ include('_inc/_form.html.twig', {
-                            btn_class: 'btn btn-warning',
-                            icon: 'fa fa-check',
-                            text: 'Mettre à jour'
-                        }) }}
+{% block layout %}
+    <h2>Edit article {{ article.title }} with slug : {{ article.slug }}</h2>
+    <div class="my-5">
+        {{ include('_inc/_form.html.twig', {
+            btn_class: 'btn btn-warning',
+            icon: 'fa fa-check',
+            text: 'Mettre à jour'
+        }) }}
 
-                        {{ include('_inc/_link.html.twig', {
-                            btn_class: 'btn btn-danger',
-                            icon: 'fa fa-trash',
-                            path: path('delete_article', {
-                                slug: article.slug
-                            }),
-                            text: 'Supprimer'
-                        }) }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+        {{ include('_inc/_link.html.twig', {
+            btn_class: 'btn btn-danger',
+            icon: 'fa fa-trash',
+            path: path('delete_article', {
+                slug: article.slug
+            }),
+            text: 'Supprimer'
+        }) }}
+    </div>
 {% endblock %}

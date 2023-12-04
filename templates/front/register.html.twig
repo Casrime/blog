@@ -1,20 +1,12 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout.html.twig' %}
 
-{% block body %}
-    <main class="mb-4">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                    <h2>Inscription</h2>
-                    <div class="my-5">
-                        {{ include('_inc/_form.html.twig', {
-                            btn_class: 'btn btn-primary',
-                            icon: 'fa fa-check',
-                            text: 'S\'inscrire'
-                        }) }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+{% block layout %}
+    <h2>Inscription</h2>
+    <div class="my-5">
+        {{ include('_inc/_form.html.twig', {
+            btn_class: 'btn btn-primary',
+            icon: 'fa fa-check',
+            text: 'S\'inscrire'
+        }) }}
+    </div>
 {% endblock %}

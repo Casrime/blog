@@ -47,6 +47,8 @@ final class BackController extends AbstractController
             $manager->persist($article);
             $manager->flush();
 
+            $this->addFlash('success', 'Article créé');
+
             return $this->redirectToRoute('admin');
         }
 
@@ -79,6 +81,8 @@ final class BackController extends AbstractController
             $manager = $this->getContainer()->get('manager');
             $manager->persist($article);
             $manager->flush();
+
+            $this->addFlash('success', 'Article modifié');
 
             return $this->redirectToRoute('show_article', [
                 'slug' => $article->getSlug(),
