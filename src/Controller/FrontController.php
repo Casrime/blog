@@ -32,7 +32,7 @@ final class FrontController extends AbstractController
             $contact = $form->getData();
             // TODO - implement Mailer interface
             // $this->mailer->send($contact);
-            $this->addFlash('message_send', 'Email envoyé');
+            $this->addFlash('success', 'Email envoyé');
 
             return $this->redirectToRoute('home');
         }
@@ -73,6 +73,8 @@ final class FrontController extends AbstractController
             $manager->persist($comment);
             $manager->flush();
 
+            $this->addFlash('success', 'Commentaire ajouté');
+
             return $this->redirectToRoute('show_article', [
                 'slug' => $article->getSlug(),
             ]);
@@ -103,6 +105,8 @@ final class FrontController extends AbstractController
             $manager->persist($user);
             $manager->flush();
 
+            $this->addFlash('success', 'Utilisateur enregistré');
+
             return $this->redirectToRoute('register');
         }
 
@@ -123,7 +127,7 @@ final class FrontController extends AbstractController
             $existingUser = $userRepository->login($user);
 
             if (null === $existingUser) {
-                $this->addFlash('error', 'Invalid credentials');
+                $this->addFlash('danger', 'Identifiants incorrects');
 
                 return $this->redirectToRoute('login');
             }
@@ -131,6 +135,8 @@ final class FrontController extends AbstractController
             /** @var Security $security */
             $security = $this->getContainer()->get('security');
             $security->login($existingUser);
+
+            $this->addFlash('success', 'Bon retour parmi nous '.$existingUser->getEmail());
 
             return $this->redirectToRoute('home');
         }

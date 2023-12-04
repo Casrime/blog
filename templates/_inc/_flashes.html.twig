@@ -1,0 +1,5 @@
+{% for label, flash_message in flashes.all %}
+    <div class="alert alert-{{ label }}" role="alert">
+        {{ flash_message }}
+    </div>
+{% endfor %}

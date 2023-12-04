@@ -60,7 +60,7 @@ abstract class AbstractController implements ControllerInterface
 
     protected function addFlash(string $key, string $message): void
     {
-        // TODO: Implement addFlash() method.
+        $this->container->get('session')->getFlashBag()->add($key, $message);
     }
 
     protected function getRepository(string $entityName): ServiceRepositoryInterface

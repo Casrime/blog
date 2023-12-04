@@ -7,6 +7,7 @@ namespace Framework\Core;
 use Framework\Database\Manager;
 use Framework\Database\ServiceRepository;
 use Framework\Form\Form;
+use Framework\HttpFoundation\Request;
 use Framework\Routing\Router;
 use Framework\Security\Security;
 use Framework\Slugger\Slugger;
@@ -44,6 +45,10 @@ final class ServiceContainer
             return new ServiceRepository();
         });
 
+        $container->register('session', function () {
+            return (new Request())->session;
+        });
+
         $container->register('slugger', function () {
             return new Slugger();
         });
@@ -62,6 +67,7 @@ final class ServiceContainer
             $twig->addFunction((new FormRow())->renderView());
             // TODO - replace $_SESSION['user']
             $twig->addGlobal('user', $_SESSION['user'] ?? null);
+            $twig->addGlobal('flashes', $container->get('session')->getFlashBag());
 
             return $twig;
         });
