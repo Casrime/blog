@@ -8,7 +8,7 @@
         text: 'Lire la suite'
     }) }}
 
-    {% if 'ROLE_ADMIN' in user.roles %}
+    {% if 'ROLE_ADMIN' in user.roles or article.user.id is same as(user.id) %}
         {{ include('_inc/_link.html.twig', {
             btn_class: 'btn btn-warning',
             icon: 'fa fa-edit',

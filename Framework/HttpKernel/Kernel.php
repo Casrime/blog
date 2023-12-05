@@ -84,8 +84,10 @@ final class Kernel implements KernelInterface
             $message = 'Page non trouvée';
         } elseif (403 === $exception->getCode()) {
             $message = 'Accès refusé';
+            $message = $exception->getMessage();
         } else {
             $message = 'Erreur interne';
+            $message = $exception->getMessage();
         }
 
         return new Response($twig->render('error.html.twig', [

@@ -6,8 +6,11 @@
     <p>{{ article.content }}</p>
 
     <hr>
-    <p>Mis à jour le : {{ article.updatedAt|date('d/m/Y') }} par {{ article.user.email }}</p>
-    <p>Créé le : {{ article.createdAt|date('d/m/Y') }} par {{ article.user.email }}</p>
+    {% if article.updatedAt %}
+        <p>Mis à jour le : {{ article.updatedAt|date('d/m/Y') }} par {{ article.user.email }}</p>
+    {% else %}
+        <p>Créé le : {{ article.createdAt|date('d/m/Y') }} par {{ article.user.email }}</p>
+    {% endif %}
 
     {{ include('_inc/_form.html.twig', {
         btn_class: 'btn btn-primary',

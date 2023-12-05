@@ -1,7 +1,8 @@
 <?php
 
-use App\Controller\BackController;
+use App\Controller\AdminController;
 use App\Controller\FrontController;
+use App\Controller\UserController;
 use Framework\Routing\Route;
 use Framework\Routing\RouteCollection;
 
@@ -12,9 +13,9 @@ $routeCollection->add(new Route('/article/{slug}', 'show_article', [FrontControl
 $routeCollection->add(new Route('/register', 'register', [FrontController::class, 'register'], ['GET', 'POST']));
 $routeCollection->add(new Route('/login', 'login', [FrontController::class, 'login'], ['GET', 'POST']));
 $routeCollection->add(new Route('/logout', 'logout', [FrontController::class, 'logout'], ['GET']));
-$routeCollection->add(new Route('/admin', 'admin', [BackController::class, 'admin'], ['GET'], [], 'ROLE_ADMIN'));
-$routeCollection->add(new Route('/admin/article/new', 'new_article', [BackController::class, 'newArticle'], ['GET', 'POST'], [], 'ROLE_ADMIN'));
-$routeCollection->add(new Route('/admin/article/edit/{slug}', 'edit_article', [BackController::class, 'editArticle'], ['GET', 'POST'], [], 'ROLE_ADMIN'));
-$routeCollection->add(new Route('/admin/article/delete/{slug}', 'delete_article', [BackController::class, 'deleteArticle'], ['GET', 'DELETE'], [], 'ROLE_ADMIN'));
+$routeCollection->add(new Route('/admin', 'admin', [AdminController::class, 'admin'], ['GET'], [], 'ROLE_ADMIN'));
+$routeCollection->add(new Route('/user/article/new', 'new_article', [UserController::class, 'newArticle'], ['GET', 'POST'], [], 'ROLE_USER'));
+$routeCollection->add(new Route('/user/article/edit/{slug}', 'edit_article', [UserController::class, 'editArticle'], ['GET', 'POST'], [], 'ROLE_USER'));
+$routeCollection->add(new Route('/user/article/delete/{slug}', 'delete_article', [UserController::class, 'deleteArticle'], ['GET', 'DELETE'], [], 'ROLE_USER'));
 
 return $routeCollection;

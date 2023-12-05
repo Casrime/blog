@@ -70,7 +70,12 @@ class Manager extends Database implements ManagerInterface
             if ($property->getType()->getName() === 'Framework\Database\CollectionInterface') {
                 continue;
             } elseif ($property->getValue($entity) instanceof ModelInterface) {
-                continue;
+                var_dump($property->getValue($entity));
+                //continue;
+                $columns[] = $propertyName.'_id=:'.$propertyName.'_id';
+                $values[$propertyName.'_id'] = $property->getValue($entity)->getId();
+                var_dump($columns);
+                var_dump($values);
             } elseif ('DateTime' === $property->getType()->getName() && null !== $property->getValue($entity)) {
                 $columns[] = $propertyName.'=:'.$propertyName;
                 $values[$propertyName] = $property->getValue($entity)->format('Y-m-d H:i:s');
@@ -80,7 +85,10 @@ class Manager extends Database implements ManagerInterface
             }
         }
         $columns = implode(', ', $columns);
+        var_dump($columns);
         $query = "UPDATE ".strtolower($reflection->getShortName())." SET {$columns} WHERE id = {$entity->getId()}";
+        var_dump($query);
+        //die;
         $this->prepare($query);
         $this->params = $values;
     }

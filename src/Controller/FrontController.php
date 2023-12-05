@@ -103,8 +103,6 @@ final class FrontController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var User $user */
             $user = $form->getData();
-            // TODO - implement these methods
-            // $user->isActive(false);
             /** @var Security $security */
             $security = $this->getContainer()->get('security');
             $user->setPassword($security->hash($user->getPassword()));

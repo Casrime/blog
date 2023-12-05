@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Framework\Form;
 
 use Framework\Database\Model\ModelInterface;
+use Framework\Database\ServiceRepository;
 use Framework\Form\Type\AbstractType;
+use Framework\Form\Type\EntityType;
 use Framework\HttpFoundation\Request;
 
 class Form implements FormInterface
@@ -29,15 +31,23 @@ class Form implements FormInterface
      */
     public function createForm(FormTypeInterface $formType, ?ModelInterface $model = null): self
     {
-        //var_dump($model->{'get'.ucfirst('title()')});
-        // TODO - handle models
         $this->model = $model;
         $formType->buildForm();
         $this->fieldCollection = $formType->getFields();
-        //var_dump($this->fieldCollection);
 
         foreach ($this->fieldCollection->all() as $abstractType) {
-            $abstractType->setValue($model->{'get'.ucfirst($abstractType->getName())}());
+            if (EntityType::class === get_class($abstractType)) {
+                $abstractType->setModel($model);
+                // TODO - handle missing choice_label, entity, or repository parameter
+                /** @var ServiceRepository $classValue */
+                $classValue = $abstractType->getOptions()['repository'];
+                $repository = new $classValue();
+                $repository->setEntityName($abstractType->getOptions()['entity']);
+                $models = $repository->findAll();
+                $abstractType->setValue($models);
+            } else {
+                $abstractType->setValue($model->{'get'.ucfirst($abstractType->getName())}());
+            }
         }
 
         return $this;
@@ -164,7 +174,20 @@ class Form implements FormInterface
             if (isset($data[$attributeName])) {
                 /** @var AbstractType $abstractType */
                 $abstractType = $data[$attributeName];
-                $this->model->{'set'.ucfirst($attributeName)}($abstractType->getValue());
+                if ($abstractType instanceof EntityType) {
+                    // TODO - handle case when choice_label, entity and repository are not set
+                    $choiceLabelValue = $abstractType->getOptions()['choice_label'];
+                    /** @var ServiceRepository $classValue */
+                    $classValue = $abstractType->getOptions()['repository'];
+                    $repository = new $classValue();
+                    $repository->setEntityName($abstractType->getOptions()['entity']);
+                    $model = $repository->findOneBy([
+                        $choiceLabelValue => $abstractType->getValue()
+                    ]);
+                    $this->model->{'set'.ucfirst($attributeName)}($model);
+                } else {
+                    $this->model->{'set'.ucfirst($attributeName)}($abstractType->getValue());
+                }
             }
         }
     }

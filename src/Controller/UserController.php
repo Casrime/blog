@@ -6,50 +6,26 @@ namespace App\Controller;
 
 use App\Form\ArticleType;
 use App\Model\Article;
-use App\Model\Comment;
 use Framework\Core\AbstractController;
-use Framework\Database\ManagerInterface;
+use Framework\Exception\AccessDeniedException;
 use Framework\Exception\NotFoundException;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
-use Framework\Slugger\SluggerInterface;
 
-final class BackController extends AbstractController
+final class UserController extends AbstractController
 {
-    public function admin(): Response
-    {
-        $articles = $this->getRepository(Article::class)->findAll();
-        $comments = $this->getRepository(Comment::class)->findAll();
-        var_dump($articles);
-        var_dump($comments);
-        die;
-        return $this->render('back/admin.html.twig', [
-            'articles' => $this->getRepository(Article::class)->findAll(),
-            'comments' => $this->getRepository(Comment::class)->findAll(),
-        ]);
-    }
-
     public function newArticle(Request $request): Response
     {
         $form = $this->createForm(new ArticleType(), new Article());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var SluggerInterface $slugger */
-            $slugger = $this->getContainer()->get('slugger');
             /** @var Article $article */
             $article = $form->getData();
-            $article->setUser($request->session->get('user'));
-            $article->setSlug($slugger->slug($article->getTitle()));
-
-            /** @var ManagerInterface $manager */
-            $manager = $this->getContainer()->get('manager');
-            $manager->persist($article);
-            $manager->flush();
-
+            $this->getContainer()->get('article_handler')->add($article);
             $this->addFlash('success', 'Article créé');
 
-            return $this->redirectToRoute('admin');
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('back/new.html.twig', [
@@ -66,22 +42,19 @@ final class BackController extends AbstractController
             throw new NotFoundException('Article not found');
         }
 
+        // TODO - check if the user is the author of the article
+        // TODO - or if the user is an admin
+        if ($article->getUser()->getId() !== $request->session->get('user')->getId() && !in_array('ROLE_ADMIN', $request->session->get('user')->getRoles())) {
+            throw new AccessDeniedException('You are not allowed to edit this article');
+        }
+
         $form = $this->createForm(new ArticleType(), $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var SluggerInterface $slugger */
-            $slugger = $this->getContainer()->get('slugger');
             /** @var Article $article */
             $article = $form->getData();
-            $article->setSlug($slugger->slug($article->getTitle()));
-            $article->setUpdatedAt(new \DateTime());
-
-            /** @var ManagerInterface $manager */
-            $manager = $this->getContainer()->get('manager');
-            $manager->persist($article);
-            $manager->flush();
-
+            $this->getContainer()->get('article_handler')->edit($article);
             $this->addFlash('success', 'Article modifié');
 
             return $this->redirectToRoute('show_article', [

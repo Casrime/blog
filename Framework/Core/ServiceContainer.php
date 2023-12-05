@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Core;
 
+use App\Handler\ArticleHandler;
 use Framework\Database\Manager;
 use Framework\Database\ServiceRepository;
 use Framework\Form\Form;
@@ -26,6 +27,11 @@ final class ServiceContainer
     public function registerContainer(): ContainerInterface
     {
         $container = new Container();
+
+        $container->register('article_handler', function () use ($container) {
+            return new ArticleHandler($container);
+        });
+
         $container->register('form', function () {
             return new Form();
         });
