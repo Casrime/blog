@@ -61,7 +61,6 @@ class Router
             $request->query->set($key, $value);
         }
 
-        // TODO - is this really needed ?
         // it just lower case every server key
         foreach ($request->server->all() as $key => $value) {
             $request->server->set(strtolower($key), $value);

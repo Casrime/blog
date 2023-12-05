@@ -44,7 +44,6 @@ final class Kernel implements KernelInterface
         }
 
         // Try to get the controller
-        // TODO - check the currentRoute has mandatory parameters like :
         $controller = $currentRoute->getController();
         if (2 !== count($controller)) {
             throw new GenericException('The controller parameter should have two values');
@@ -62,12 +61,8 @@ final class Kernel implements KernelInterface
         }
 
         // Try to get the method of the controller
-        // TODO - check if the controller method exists in the controller called
-        // var_dump($instantiateController, $controllerMethod);
         if (!method_exists($instantiateController, $controllerMethod)) {
-            // TODO - add controller name and method name
-            var_dump('this method does not exist in this controller');
-            // die;
+            throw new GenericException(sprintf('The %s method does not exist in the %s controller', $controllerMethod, $controllerFQN));
         }
 
         return $instantiateController->$controllerMethod($request);

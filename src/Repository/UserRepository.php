@@ -11,11 +11,8 @@ use Framework\Security\UserInterface;
 
 final class UserRepository extends ServiceRepository
 {
-    private Security $security;
-
-    public function __construct()
+    public function __construct(private readonly Security $security)
     {
-        $this->security = new Security();
     }
 
     public function checkIfValueIsAlreadyUsed(string $email): bool

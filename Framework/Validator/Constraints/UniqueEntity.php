@@ -19,7 +19,6 @@ final class UniqueEntity
         $userRepositoryName = str_replace('Model', 'Repository', $this->model.'Repository');
         $userRepository = new $userRepositoryName;
 
-        // TODO - add custom exception here ?
         if (!$userRepository->checkIfValueIsAlreadyUsed($value)) {
             return false;
         }

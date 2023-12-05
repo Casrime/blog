@@ -17,15 +17,6 @@
             }),
             text: 'Modifier'
         }) }}
-        <!-- TODO - change this to a form with a DELETE method -->
-        <!-- TODO - add a confirmation modal -->
-        {{ include('_inc/_link.html.twig', {
-            btn_class: 'btn btn-danger',
-            icon: 'fa fa-trash',
-            path: path('delete_article', {
-                slug: article.slug
-            }),
-            text: 'Supprimer'
-        }) }}
+        {{ include('_inc/_form_article_delete.html.twig') }}
     {% endif %}
 </div>

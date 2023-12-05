@@ -138,11 +138,9 @@ class Form implements FormInterface
     public function getData(): array|ModelInterface
     {
         if (null !== $this->model) {
-            // TODO - do we need to clear also in this case ?
 
             return $this->model;
         }
-        // TODO: handle model case.
         // TODO - replace type by AbstractTypeInterface and check autocompletion still works
         // TODO - don't forget to add forgotten methods in AbstractTypeInterface
         $data = [];
@@ -201,7 +199,6 @@ class Form implements FormInterface
                 foreach ($field->getOptions()['constraints'] as $constraint) {
                     if ($constraint->validate($field->getValue())) {
                         $this->errors[$field->getName()] = $constraint->message;
-                        // TODO - move this to a specific method named generateMessageRawError ?
                         // Replace dynamic values in constraint message
                         preg_replace_callback_array(
                             [

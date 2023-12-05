@@ -40,8 +40,8 @@ abstract class Database
         } catch (Exception $exception) {
             throw new GenericException('Error : ' . $exception->getMessage());
         }
-        // TODO - close cursor
-        //$this->statement->closeCursor();
+
+        $this->statement->closeCursor();
     }
 
     public function getEntityName(): ?string

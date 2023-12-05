@@ -7,7 +7,6 @@ namespace Framework\Form;
 use Framework\Form\Type\AbstractTypeInterface;
 use Framework\Form\Type\TextType;
 
-// TODO - rename this CollectionType and implements CollectionTypeInterface ?
 final class FieldCollection
 {
     /**
@@ -29,7 +28,6 @@ final class FieldCollection
             $type = TextType::class;
         }
 
-        // $this->fields[] = new $type($string, $type, $options);
         $this->fields[$string] = new $type($string, $type, $options);
 
         return $this;

@@ -19,7 +19,7 @@ class Request
         $this->query = new Parameter($_GET);
         $this->request = new Parameter($_POST);
         $this->server = new Parameter($_SERVER);
-        $this->session = new Session($_SESSION);
+        $this->session = new Session();
     }
 
     /**

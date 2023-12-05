@@ -12,7 +12,6 @@ final class FormStart implements FormViewInterface
     public function renderView(): TwigFunction
     {
         return new TwigFunction('form_start', function (Form $form, array $options = []): void {
-            // TODO - create a method to replace this if and the next one
             if (isset($options['action'])) {
                 $form->setAction($options['action']);
             }
@@ -21,7 +20,6 @@ final class FormStart implements FormViewInterface
                 $form->setMethod($options['method']);
             }
 
-            // TODO - use ternary instead of this
             if (null !== $form->getAction()) {
                 $form->setAction('action="'.$form->getAction().'"');
             } else {

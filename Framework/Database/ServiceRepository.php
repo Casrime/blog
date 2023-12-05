@@ -128,13 +128,10 @@ class ServiceRepository extends Database implements ServiceRepositoryInterface
                     $associatedEntity = $this->buildObject($result);
                     $model->{'set' . ucwords($property->getName())}($associatedEntity);
                 }
-                // TODO - change 'Framework\Database\CollectionInterface' ?
             } elseif (interface_exists($property->getType()->getName()) && $property->getType()->getName() === 'Framework\Database\CollectionInterface') {
-                // TODO - handle array of ModelInterface relation
                 $modelInterfaceName = substr(ucfirst($property->getName()), 0, -1);
                 $entityName = str_replace($reflection->getShortName(), $modelInterfaceName, $property->class);
                 $this->setEntityName($entityName);
-                // TODO - is it the same here ? Do we need to replace $model->getId() by $model->{$this->getterRelation}()->getId() ?
                 $criteria = [lcfirst($reflection->getShortName()).'_id' => $model->getId()];
                 $result = $this->fetchAll($criteria);
                 foreach ($result as $entry){

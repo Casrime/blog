@@ -10,12 +10,16 @@ class Manager extends Database implements ManagerInterface
 {
     public function persist(object $entity): void
     {
-        // TODO - if entity->getId() is null, then insert, else update
         if (null === $entity->getId()) {
             $this->insert($entity);
         } else {
             $this->update($entity);
         }
+    }
+
+    public function remove(object $entity): void
+    {
+        $this->delete($entity);
     }
 
     public function flush(): void
@@ -84,5 +88,21 @@ class Manager extends Database implements ManagerInterface
         $query = "UPDATE ".strtolower($reflection->getShortName())." SET {$columns} WHERE id = {$entity->getId()}";
         $this->prepare($query);
         $this->params = $values;
+    }
+
+    private function delete(object $entity): void
+    {
+        $reflection = new \ReflectionClass($entity);
+        $properties = $reflection->getProperties();
+        foreach ($properties as $property) {
+            $propertyName = $property->getName();
+            if ('Framework\Database\CollectionInterface' === $property->getType()->getName()) {
+                $query = "DELETE FROM ".substr($propertyName, 0, -1)." WHERE ".strtolower($reflection->getShortName())."_id = {$entity->getId()}";
+                $this->prepare($query);
+                $this->flush();
+            }
+        }
+        $query = "DELETE FROM ".strtolower($reflection->getShortName())." WHERE id = {$entity->getId()}";
+        $this->prepare($query);
     }
 }

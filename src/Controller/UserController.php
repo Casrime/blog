@@ -11,6 +11,7 @@ use Framework\Core\AbstractController;
 use Framework\Core\ContainerInterface;
 use Framework\Exception\AccessDeniedException;
 use Framework\Exception\NotFoundException;
+use Framework\HttpFoundation\RedirectResponse;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
 
@@ -77,7 +78,18 @@ final class UserController extends AbstractController
 
     public function deleteArticle(Request $request): Response
     {
-        // TODO - replace this with a redirectToRoute method
-        return new Response('article deleted');
+        $slug = $request->query->get('slug');
+        $article = $this->getRepository(Article::class)->findOneBy(['slug' => $slug]);
+        if (null === $article) {
+            throw new NotFoundException('Article not found');
+        }
+
+        /** @var ManagerInterface $manager */
+        $manager = $this->getContainer()->get('manager');
+        $manager->remove($article);
+        $manager->flush();
+        $this->addFlash('danger', 'Article supprimé');
+
+        return $this->redirectToRoute('blog');
     }
 }
