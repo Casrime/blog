@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Framework\Form\Type;
 
 use Framework\Database\Model\ModelInterface;
-use Framework\Security\UserInterface;
 
 final class EntityType extends AbstractType
 {
@@ -44,14 +43,12 @@ final class EntityType extends AbstractType
             }
         }
 
-        // TODO - check help, placeholder and require
         return '
             <select
                 class="form-select"
                 name="'.$this->getName().'"
                 id="'.$this->getName().'"
                 '.$this->getHelp().'
-                '.$this->getPlaceholder().'
                 '.$this->getRequired().'
             >
               '.$htmlOptions.'

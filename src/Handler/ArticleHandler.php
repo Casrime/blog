@@ -25,7 +25,6 @@ final class ArticleHandler
     public function edit(Article $article): void
     {
         $this->slug($article);
-        //$article->setUser($this->container->get('session')->get('user'));
         $article->setUpdatedAt(new \DateTime());
         $this->save($article);
     }

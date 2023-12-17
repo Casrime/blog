@@ -6,6 +6,7 @@ namespace Framework\Form;
 
 use Framework\Database\Model\ModelInterface;
 use Framework\Database\ServiceRepository;
+use Framework\Exception\GenericException;
 use Framework\Form\Type\AbstractType;
 use Framework\Form\Type\EntityType;
 use Framework\HttpFoundation\Request;
@@ -38,7 +39,7 @@ class Form implements FormInterface
         foreach ($this->fieldCollection->all() as $abstractType) {
             if (EntityType::class === get_class($abstractType)) {
                 $abstractType->setModel($model);
-                // TODO - handle missing choice_label, entity, or repository parameter
+                $this->checkEntityFields($abstractType);
                 /** @var ServiceRepository $classValue */
                 $classValue = $abstractType->getOptions()['repository'];
                 $repository = new $classValue();
@@ -175,7 +176,7 @@ class Form implements FormInterface
                 /** @var AbstractType $abstractType */
                 $abstractType = $data[$attributeName];
                 if ($abstractType instanceof EntityType) {
-                    // TODO - handle case when choice_label, entity and repository are not set
+                    $this->checkEntityFields($abstractType);
                     $choiceLabelValue = $abstractType->getOptions()['choice_label'];
                     /** @var ServiceRepository $classValue */
                     $classValue = $abstractType->getOptions()['repository'];
@@ -215,6 +216,20 @@ class Form implements FormInterface
                     }
                 }
             }
+        }
+    }
+
+    private function checkEntityFields(EntityType $abstractType): void
+    {
+        $options = $abstractType->getOptions();
+        if (!isset($options['choice_label'])) {
+            throw new GenericException('You must set the choice_label option for the EntityType field');
+        }
+        if (!isset($options['entity'])) {
+            throw new GenericException('You must set the entity option for the EntityType field');
+        }
+        if (!isset($options['repository'])) {
+            throw new GenericException('You must set the repository option for the EntityType field');
         }
     }
 }

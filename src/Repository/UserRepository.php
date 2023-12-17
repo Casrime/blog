@@ -46,7 +46,6 @@ final class UserRepository extends ServiceRepository
             $user->setRoles(json_decode($result['roles']));
             $user->setEmail($result['email']);
             $user->setCreatedAt(new \DateTime($result['createdAt']));
-            //$user->setUpdatedAt($result['updated_at']);
 
             return $user;
         }
