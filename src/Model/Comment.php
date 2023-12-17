@@ -11,6 +11,7 @@ final class Comment implements ModelInterface
     private ?int $id = null;
     private ?string $comment = null;
     private ?Article $article = null;
+    private ?string $active = '0';
 
     public function getId(): ?int
     {
@@ -40,5 +41,15 @@ final class Comment implements ModelInterface
     public function setArticle(?Article $article): void
     {
         $this->article = $article;
+    }
+
+    public function getActive(): ?string
+    {
+        return $this->active;
+    }
+
+    public function setActive(?string $active): void
+    {
+        $this->active = $active;
     }
 }

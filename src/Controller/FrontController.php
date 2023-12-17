@@ -66,6 +66,8 @@ final class FrontController extends AbstractController
 
         /** @var Article $article */
         $article = $this->getRepository(Article::class)->findOneBy(['slug' => $slug]);
+        $comments = $this->getRepository(Comment::class)->findBy(['article_id' => $article->getId(), 'active' => '1']);
+
         if (null === $article) {
             throw new NotFoundException('Article not found');
         }
@@ -91,6 +93,7 @@ final class FrontController extends AbstractController
 
         return $this->render('front/article.html.twig', [
             'article' => $article,
+            'comments' => $comments,
             'form' => $form,
         ]);
     }
