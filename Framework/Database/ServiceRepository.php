@@ -75,7 +75,20 @@ class ServiceRepository extends Database implements ServiceRepositoryInterface
             $query = $this->getConnection()->prepare('SELECT * FROM '.$tableName);
             $query->execute([]);
         } else {
-            $query = $this->getConnection()->prepare('SELECT * FROM '.$tableName.' WHERE '.array_keys($criteria)[0].' = :'.array_keys($criteria)[0]);
+            $criteriaString = '';
+            $keyNumber = 1;
+            foreach ($criteria as $key => $value) {
+                if ($keyNumber === 1) {
+                    $criteriaString .= 'WHERE '.$key.' = :'.$key;
+                    $keyNumber++;
+                } elseif ($keyNumber === count($criteria)) {
+                    $criteriaString .= ' AND '.$key.' = :'.$key;
+                } else {
+                    $criteriaString .= ' AND '.$key.' = :'.$key;
+                    $keyNumber++;
+                }
+            }
+            $query = $this->getConnection()->prepare('SELECT * FROM '.$tableName.' '.$criteriaString);
             $query->execute($criteria);
         }
         $result = $query->fetchAll(PDO::FETCH_ASSOC);

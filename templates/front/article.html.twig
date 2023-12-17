@@ -22,11 +22,13 @@
 
     <div id="comments">
         <h2>Commentaires</h2>
-        {% for comment in article.comments %}
+        {% for comment in comments %}
             <div class="comment">
                 {{ comment.comment }}
                 <hr>
             </div>
+        {% else %}
+            <p>Aucun commentaire</p>
         {% endfor %}
     </div>
 {% endblock %}
