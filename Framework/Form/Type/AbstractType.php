@@ -11,7 +11,7 @@ abstract class AbstractType implements AbstractTypeInterface
     private array $options;
     private array $errors = [];
 
-    private ?string $value = null;
+    private mixed $value = null;
 
     protected string $content = '';
 
@@ -69,12 +69,12 @@ abstract class AbstractType implements AbstractTypeInterface
         return $this->options[$key] ?? null;
     }
 
-    public function getValue(): ?string
+    public function getValue(): mixed
     {
         return $this->value;
     }
 
-    public function setValue(?string $value): void
+    public function setValue(mixed $value): void
     {
         $this->value = $value;
     }

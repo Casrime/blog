@@ -26,6 +26,7 @@ final class ServiceContainer
     public function registerContainer(): ContainerInterface
     {
         $container = new Container();
+
         $container->register('form', function () {
             return new Form();
         });

@@ -30,8 +30,7 @@ final class UserRepository extends ServiceRepository
 
     public function login(UserInterface $user): ?UserInterface
     {
-        // TODO - check if user is active ?
-        $query = $this->getConnection()->prepare('SELECT * FROM user WHERE email = :email');
+        $query = $this->getConnection()->prepare('SELECT * FROM user WHERE email = :email AND active = 1');
         $query->execute([
             'email' => $user->getEmail(),
         ]);
@@ -42,14 +41,11 @@ final class UserRepository extends ServiceRepository
         }
 
         if ($this->security->verify($user->getPassword(), $result['password'])) {
-            // TODO - add method to hydrate user
             $user = new User();
             $user->setId($result['id']);
             $user->setRoles(json_decode($result['roles']));
             $user->setEmail($result['email']);
-            //$user->setActive($result['active']);
             $user->setCreatedAt(new \DateTime($result['createdAt']));
-            //$user->setUpdatedAt($result['updated_at']);
 
             return $user;
         }

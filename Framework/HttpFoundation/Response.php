@@ -40,6 +40,8 @@ class Response
     {
         $this->statusCode = $statusCode;
 
+        http_response_code($this->statusCode);
+
         return $this;
     }
 

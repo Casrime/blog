@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use App\Model\User;
+use App\Repository\UserRepository;
 use Framework\Form\FormType;
+use Framework\Form\Type\EntityType;
 use Framework\Form\Type\TextareaType;
 use Framework\Form\Type\TextType;
 use Framework\Validator\Constraints\Length;
@@ -15,6 +18,16 @@ final class ArticleType extends FormType
     public function buildForm(): void
     {
         $this->fieldCollection
+            ->add('user', EntityType::class, [
+                'choice_label' => 'email',
+                'entity' => User::class,
+                'constraints' => [
+                    new NotBlank(),
+                ],
+                'label' => 'Auteur',
+                'repository' => UserRepository::class,
+                'required' => true,
+            ])
             ->add('title', TextType::class, [
                 'constraints' => [
                     new NotBlank(),

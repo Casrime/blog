@@ -70,7 +70,8 @@ class Manager extends Database implements ManagerInterface
             if ($property->getType()->getName() === 'Framework\Database\CollectionInterface') {
                 continue;
             } elseif ($property->getValue($entity) instanceof ModelInterface) {
-                continue;
+                $columns[] = $propertyName.'_id=:'.$propertyName.'_id';
+                $values[$propertyName.'_id'] = $property->getValue($entity)->getId();
             } elseif ('DateTime' === $property->getType()->getName() && null !== $property->getValue($entity)) {
                 $columns[] = $propertyName.'=:'.$propertyName;
                 $values[$propertyName] = $property->getValue($entity)->format('Y-m-d H:i:s');
