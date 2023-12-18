@@ -86,6 +86,7 @@ final class Kernel implements KernelInterface
             $message = 'Accès refusé';
         } else {
             $message = 'Erreur interne';
+            $message = $exception->getMessage();
         }
 
         return new Response($twig->render('error.html.twig', [

@@ -20,6 +20,7 @@ use Framework\Twig\Path;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
+use Twig\TwigFilter;
 
 final class ServiceContainer
 {
@@ -77,6 +78,9 @@ final class ServiceContainer
             // TODO - replace $_SESSION['user']
             $twig->addGlobal('user', $_SESSION['user'] ?? null);
             $twig->addGlobal('flashes', $container->get('session')->getFlashBag());
+            $twig->addFilter(new TwigFilter('string', function ($value) {
+                return (string) $value;
+            } ));
 
             return $twig;
         });

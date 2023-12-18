@@ -12,7 +12,7 @@ final class User implements ModelInterface, UserInterface
     private ?int $id = null;
     private ?string $email = null;
     private ?string $password = null;
-    private bool $active = false;
+    private ?string $active = '0';
     private array $roles = [];
     private \DateTime $createdAt;
 
@@ -51,12 +51,12 @@ final class User implements ModelInterface, UserInterface
         $this->password = $password;
     }
 
-    public function isActive(): bool
+    public function getActive(): ?string
     {
         return $this->active;
     }
 
-    public function setActive(bool $active): void
+    public function setActive(?string $active): void
     {
         $this->active = $active;
     }
