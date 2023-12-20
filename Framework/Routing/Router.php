@@ -109,4 +109,26 @@ class Router
     {
         return $this->routes;
     }
+
+    public function hasRoute(string $routeName): bool
+    {
+        foreach ($this->routes->all() as $route) {
+            if ($route->getName() === $routeName) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getRoutePathByName(string $routeName): string
+    {
+        foreach ($this->routes->all() as $route) {
+            if ($route->getName() === $routeName) {
+                return $route->getPath();
+            }
+        }
+
+        throw new NotFoundException(sprintf('The route %s does not exist', $routeName));
+    }
 }

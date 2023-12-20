@@ -12,6 +12,7 @@ use Framework\Exception\GenericException;
 use Framework\HttpFoundation\RedirectResponse;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
+use Framework\Routing\Router;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -35,8 +36,13 @@ final class Kernel implements KernelInterface
         $currentRoute = $this->container->get('router')->match($request);
         $user = $request->session->get('user');
         if (null === $user && null !== $currentRoute->getRole()) {
-            // TODO - handle /login url if not exists
-            return new RedirectResponse('/login');
+            /** @var Router $router */
+            $router = $this->container->get('router');
+
+            if (true === $router->hasRoute('login')) {
+                return new RedirectResponse($router->getRoutePathByName('login'));
+            }
+            throw new GenericException('The login route does not exist');
         }
 
         if (null !== $currentRoute->getRole() && !in_array($currentRoute->getRole(), $user->getRoles())) {
@@ -53,11 +59,11 @@ final class Kernel implements KernelInterface
         if (!class_exists($controllerFQN)) {
             throw new GenericException(sprintf('The %s parameter is not a class we can instantiate', $controllerFQN));
         }
-        // var_dump(class_exists($controllerFQN));
+
         $controllerMethod = $controller[1];
         $instantiateController = new $controllerFQN($this->container);
         if (!$instantiateController instanceof AbstractController) {
-            var_dump('not instance of AbstractController');
+            throw new GenericException(sprintf('The %s class does not extend the AbstractController class', $controllerFQN));
         }
 
         // Try to get the method of the controller

@@ -99,7 +99,7 @@ final class FrontController extends AbstractController
 
     public function register(Request $request): Response
     {
-        $form = $this->createForm(new RegisterType(), new User());
+        $form = $this->createForm(new RegisterType($this->getContainer()->get('security')), new User());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

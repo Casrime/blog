@@ -17,7 +17,7 @@ final readonly class Mailer implements MailerInterface
         $headers = [
             'From' => $email->getFrom(),
             'Reply-To' => $email->getFrom(),
-            'X-Mailer' => 'PHP/' . phpversion(),
+            'X-Mailer' => 'PHP/'.phpversion(),
             'MIME-Version' => '1.0',
             'Content-Type' => 'text/html; charset=utf-8',
         ];

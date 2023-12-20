@@ -14,6 +14,7 @@ final class Container implements ContainerInterface
     {
         if (isset($this->services[$serviceName])) {
             $callback = $this->services[$serviceName];
+
             return $callback();
         }
         throw new GenericException("Service not registered: $serviceName");

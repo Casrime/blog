@@ -11,7 +11,6 @@ use Framework\Core\AbstractController;
 use Framework\Core\ContainerInterface;
 use Framework\Exception\AccessDeniedException;
 use Framework\Exception\NotFoundException;
-use Framework\HttpFoundation\RedirectResponse;
 use Framework\HttpFoundation\Request;
 use Framework\HttpFoundation\Response;
 

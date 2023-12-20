@@ -36,7 +36,7 @@ class Manager extends Database implements ManagerInterface
         $values = [];
         foreach ($properties as $property) {
             $propertyName = $property->getName();
-            if ($property->getType()->getName() === 'Framework\Database\CollectionInterface') {
+            if ('Framework\Database\CollectionInterface' === $property->getType()->getName()) {
                 continue;
             } elseif ($property->getValue($entity) instanceof ModelInterface) {
                 $columns[] = $propertyName.'_id';
@@ -50,7 +50,7 @@ class Manager extends Database implements ManagerInterface
                 $columns[] = $propertyName;
                 $prepareParams[] = '?';
                 $values[] = json_encode($property->getValue($entity));
-            } elseif ('array' !== $property->getType()->getName() && null !== $property->getValue($entity)){
+            } elseif ('array' !== $property->getType()->getName() && null !== $property->getValue($entity)) {
                 $columns[] = $propertyName;
                 $prepareParams[] = '?';
                 $values[] = $property->getValue($entity);
@@ -58,7 +58,7 @@ class Manager extends Database implements ManagerInterface
         }
         $columns = implode(', ', $columns);
         $prepareParams = implode(', ', $prepareParams);
-        $query = "INSERT INTO ".strtolower($reflection->getShortName())." ({$columns}) VALUES ({$prepareParams})";
+        $query = 'INSERT INTO '.strtolower($reflection->getShortName())." ({$columns}) VALUES ({$prepareParams})";
         $this->prepare($query);
         $this->params = $values;
     }
@@ -71,7 +71,7 @@ class Manager extends Database implements ManagerInterface
         $values = [];
         foreach ($properties as $property) {
             $propertyName = $property->getName();
-            if ($property->getType()->getName() === 'Framework\Database\CollectionInterface') {
+            if ('Framework\Database\CollectionInterface' === $property->getType()->getName()) {
                 continue;
             } elseif ($property->getValue($entity) instanceof ModelInterface) {
                 $columns[] = $propertyName.'_id=:'.$propertyName.'_id';
@@ -79,13 +79,13 @@ class Manager extends Database implements ManagerInterface
             } elseif ('DateTime' === $property->getType()->getName() && null !== $property->getValue($entity)) {
                 $columns[] = $propertyName.'=:'.$propertyName;
                 $values[$propertyName] = $property->getValue($entity)->format('Y-m-d H:i:s');
-            } elseif ('array' !== $property->getType()->getName() && null !== $property->getValue($entity)){
+            } elseif ('array' !== $property->getType()->getName() && null !== $property->getValue($entity)) {
                 $columns[] = $propertyName.'=:'.$propertyName;
                 $values[$propertyName] = $property->getValue($entity);
             }
         }
         $columns = implode(', ', $columns);
-        $query = "UPDATE ".strtolower($reflection->getShortName())." SET {$columns} WHERE id = {$entity->getId()}";
+        $query = 'UPDATE '.strtolower($reflection->getShortName())." SET {$columns} WHERE id = {$entity->getId()}";
         $this->prepare($query);
         $this->params = $values;
     }
@@ -97,12 +97,12 @@ class Manager extends Database implements ManagerInterface
         foreach ($properties as $property) {
             $propertyName = $property->getName();
             if ('Framework\Database\CollectionInterface' === $property->getType()->getName()) {
-                $query = "DELETE FROM ".substr($propertyName, 0, -1)." WHERE ".strtolower($reflection->getShortName())."_id = {$entity->getId()}";
+                $query = 'DELETE FROM '.substr($propertyName, 0, -1).' WHERE '.strtolower($reflection->getShortName())."_id = {$entity->getId()}";
                 $this->prepare($query);
                 $this->flush();
             }
         }
-        $query = "DELETE FROM ".strtolower($reflection->getShortName())." WHERE id = {$entity->getId()}";
+        $query = 'DELETE FROM '.strtolower($reflection->getShortName())." WHERE id = {$entity->getId()}";
         $this->prepare($query);
     }
 }

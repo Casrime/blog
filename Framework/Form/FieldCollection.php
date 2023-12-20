@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Framework\Form;
 
 use Framework\Form\Type\AbstractTypeInterface;
-use Framework\Form\Type\TextType;
+use Framework\Form\Type\InputType;
 
 final class FieldCollection
 {
@@ -25,7 +25,7 @@ final class FieldCollection
     public function add(string $string, ?string $type = null, array $options = []): self
     {
         if (null === $type) {
-            $type = TextType::class;
+            $type = InputType::class;
         }
 
         $this->fields[$string] = new $type($string, $type, $options);

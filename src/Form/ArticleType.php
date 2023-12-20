@@ -9,7 +9,7 @@ use App\Repository\UserRepository;
 use Framework\Form\FormType;
 use Framework\Form\Type\EntityType;
 use Framework\Form\Type\TextareaType;
-use Framework\Form\Type\TextType;
+use Framework\Form\Type\InputType;
 use Framework\Validator\Constraints\Length;
 use Framework\Validator\Constraints\NotBlank;
 
@@ -24,11 +24,14 @@ final class ArticleType extends FormType
                 'constraints' => [
                     new NotBlank(),
                 ],
+                'criteria' => [
+                    'active' => '1',
+                ],
                 'label' => 'Auteur',
                 'repository' => UserRepository::class,
                 'required' => true,
             ])
-            ->add('title', TextType::class, [
+            ->add('title', InputType::class, [
                 'constraints' => [
                     new NotBlank(),
                     new Length(['min' => 3, 'max' => 255]),
@@ -36,7 +39,7 @@ final class ArticleType extends FormType
                 'label' => 'Titre',
                 'required' => true,
             ])
-            ->add('chapo', TextType::class, [
+            ->add('chapo', InputType::class, [
                 'constraints' => [
                     new NotBlank(),
                     new Length(['min' => 3, 'max' => 255]),

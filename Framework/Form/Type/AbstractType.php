@@ -122,8 +122,15 @@ abstract class AbstractType implements AbstractTypeInterface
         return $this->get('required') ? 'required' : '';
     }
 
-    // TODO - add getDisabled()
-    // TODO - add getReadonly()
+    public function getDisabled(): string
+    {
+        return $this->get('disabled') ? 'disabled' : '';
+    }
+
+    public function getReadonly(): string
+    {
+        return $this->get('readonly') ? 'readonly' : '';
+    }
 
     abstract public function generateHtml(): string;
 }

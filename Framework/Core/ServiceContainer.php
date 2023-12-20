@@ -28,8 +28,8 @@ final class ServiceContainer
     {
         $container = new Container();
 
-        $container->register('form', function () {
-            return new Form();
+        $container->register('form', function () use ($container) {
+            return new Form($container);
         });
 
         $container->register('mailer', function () use ($container) {
@@ -79,7 +79,7 @@ final class ServiceContainer
             $twig->addGlobal('flashes', $container->get('session')->getFlashBag());
             $twig->addFilter(new TwigFilter('string', function ($value) {
                 return (string) $value;
-            } ));
+            }));
 
             return $twig;
         });

@@ -16,6 +16,7 @@ final class Slugger implements SluggerInterface
         $string = preg_replace('#ð|ò|ó|ô|õ|ö#', 'o', $string);
         $string = preg_replace('#ù|ú|û|ü#', 'u', $string);
         $string = preg_replace('#ý|ÿ#', 'y', $string);
+
         return preg_replace('#|_|:|,|\'|"#', '', $string);
     }
 }
