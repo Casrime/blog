@@ -1,0 +1,34 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+object user {
+   -id: INTEGER [PK]
+   -email: VARCHAR [100]
+   -password: VARCHAR [60]
+   -active: TINYINT [1]
+   -roles: JSON
+   -createdAt: DATETIME
+}
+
+object article {
+   -id: INTEGER [PK]
+   -title: VARCHAR [255]
+   -slug: VARCHAR [255]
+   -chapo: VARCHAR [255]
+   -content: TEXT
+   -createdAt: DATETIME
+   -updatedAt: DATETIME
+   -user_id: INTEGER [FK]
+}
+
+object comment {
+   -id: INTEGER [PK]
+   -comment: TEXT
+   -active: TINYINT [1]
+   -article_id: INTEGER [FK]
+}
+
+user - article
+article - comment
+
+@enduml

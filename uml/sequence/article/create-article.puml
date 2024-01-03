@@ -1,0 +1,23 @@
+@startuml
+autonumber
+title       "User or Admin" wants to create an article
+actor       "User or Admin"
+participant Application
+database    Database
+
+ref over "User or Admin", Application, Database: Login
+"User or Admin" -> Application: GET /user/article/new
+Application -> "User or Admin": Render /user/article/new
+"User or Admin" -> Application: POST /user/article/new
+Application -> Application: Checks values
+
+alt valid values
+    Application -> Database: Create article
+    Database -> Application: Article created
+    Application -> "User or Admin": Redirect to /
+else invalid values
+    Application -> Application: Add error for article
+    Application -> "User or Admin": Render /user/article/new
+end
+
+@enduml

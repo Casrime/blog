@@ -1,0 +1,11 @@
+@startuml
+autonumber
+title       Visitor wants to show comments
+actor       Visitor
+participant Application
+database    Database
+
+ref over Visitor, Application, Database: Show articles
+ref over Visitor, Application, Database: Show article
+
+@enduml

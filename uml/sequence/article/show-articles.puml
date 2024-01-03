@@ -1,0 +1,13 @@
+@startuml
+autonumber
+title       "Visitor" wants to show articles
+actor       "Visitor"
+participant Application
+database    Database
+
+"Visitor" -> Application: GET /articles
+Application -> Database: get articles
+Database -> Database: get articles
+Database -> Application: send articles
+"Visitor" <-- Application: Render /articles
+@enduml

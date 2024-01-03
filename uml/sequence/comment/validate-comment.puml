@@ -1,0 +1,22 @@
+@startuml
+autonumber
+title       Admin wants to validate a comment
+actor       Admin
+participant Application
+database    Database
+
+ref over Admin, Application, Database: Login
+
+Admin -> Application: GET /admin
+Application -> Database: Get inactive comments
+Database -> Database: Query inactive comments
+Database -> Application: Return inactive comments
+Admin <-- Application: Render /admin
+
+Admin -> Application: GET /admin/activate-comment/:id
+Application -> Database: Activate comment
+Database -> Database: Query activate comment
+Database -> Application: Return comment
+Admin <-- Application: Redirect to /admin
+
+@enduml

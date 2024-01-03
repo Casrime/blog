@@ -1,0 +1,24 @@
+@startuml
+autonumber
+title       User wants to delete his article
+actor       User
+participant Application
+database    Database
+
+ref over User, Application, Database: Login
+ref over User, Application, Database: Show articles
+
+User -> Application: GET /user/article/delete/:slug
+Application -> Database: get article by slug
+Database -> Application: return article
+Application -> Application: Check if article belongs to user
+alt article belongs to user
+    Application -> Database: delete article
+    Database -> Application: return deleted article
+    Application -> User: Redirect to /blog
+else article does not belong to user
+    Application -> Application: Access denied
+    Application -> User: Render error page
+end
+
+@enduml

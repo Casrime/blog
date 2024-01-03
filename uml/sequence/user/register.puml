@@ -1,0 +1,23 @@
+@startuml
+autonumber
+title       "Visitor" wants to register
+actor       "Visitor"
+participant Application
+database    Database
+
+"Visitor" -> Application: GET /register
+"Visitor" <-- Application: Render /register
+"Visitor" -> Application: POST /register
+Application -> Application: hash password
+Application -> Database: send values to database
+Database -> Database: checks credentials
+alt user registered
+    Database -> Application: User don't exists
+    Application -> Application: Register user
+    Application -> "Visitor": Redirect to register
+else authentication error
+    Database -> Application: User already exists
+    Application -> Application: Add error for register
+    Application -> "Visitor": render /register
+end
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+autonumber
+title       User wants to update his article
+actor       User
+participant Application
+database    Database
+
+ref over User, Application, Database: Login
+ref over User, Application, Database: Show articles
+
+User -> Application: GET /user/article/edit/:slug
+Application -> Database: get article by slug
+Database -> Application: return article
+Application -> Application: Check if article belongs to user
+alt article belongs to user
+    Application -> User: Render /user/article/edit
+    User -> Application: POST /user/article/edit/:slug
+    Application -> Application: check values
+    alt values are valid
+        Application -> Database: update article
+        Database -> Application: return updated article
+        Application -> User: Redirect to /article/:slug
+    else values are not valid
+        Application -> Application: Add error messages
+        Application -> User: Render /user/article/edit/:slug
+    end
+else article does not belong to user
+    Application -> Application: Access denied
+    Application -> User: Render error page
+end
+
+@enduml

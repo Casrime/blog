@@ -1,0 +1,18 @@
+@startuml
+autonumber
+title       Admin wants to delete an article
+actor       Admin
+participant Application
+database    Database
+
+ref over Admin, Application, Database: Login
+ref over Admin, Application, Database: Show articles
+
+Admin -> Application: GET /user/article/delete/:slug
+Application -> Database: get article by slug
+Database -> Application: return article
+Application -> Database: delete article
+Database -> Application: return deleted article
+Application -> Admin: Redirect to /blog
+
+@enduml
