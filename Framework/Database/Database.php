@@ -2,15 +2,13 @@
 
 namespace Framework\Database;
 
-use Exception;
 use Framework\Exception\GenericException;
-use PDO;
 
 abstract class Database
 {
-    const DB_HOST = 'mysql:host=localhost;dbname=blog;charset=utf8';
-    const DB_USER = 'root';
-    const DB_PASS = '';
+    public const DB_HOST = 'mysql:host=localhost;dbname=blog;charset=utf8';
+    public const DB_USER = 'root';
+    public const DB_PASS = '';
     private \PDOStatement|false $statement;
     protected array $params = [];
     private ?string $entityName = null;
@@ -18,10 +16,11 @@ abstract class Database
     public function getConnection()
     {
         try {
-            $connection = new PDO(self::DB_HOST, self::DB_USER, self::DB_PASS);
-            $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $connection = new \PDO(self::DB_HOST, self::DB_USER, self::DB_PASS);
+            $connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
             return $connection;
-        } catch(Exception $errorConnection) {
+        } catch (\Exception $errorConnection) {
             throw new GenericException('Connection error :'.$errorConnection->getMessage());
         }
     }
@@ -37,11 +36,11 @@ abstract class Database
     {
         try {
             $this->statement->execute($this->params);
-        } catch (Exception $exception) {
-            throw new GenericException('Error : ' . $exception->getMessage());
+        } catch (\Exception $exception) {
+            throw new GenericException('Error : '.$exception->getMessage());
         }
-        // TODO - close cursor
-        //$this->statement->closeCursor();
+
+        $this->statement->closeCursor();
     }
 
     public function getEntityName(): ?string

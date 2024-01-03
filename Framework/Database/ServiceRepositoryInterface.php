@@ -12,7 +12,7 @@ interface ServiceRepositoryInterface
 
     public function find(int $id): ?ModelInterface;
 
-    public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null): array;
+    public function findBy(array $criteria): array;
 
-    public function findOneBy(array $criteria, ?array $orderBy = null): ?ModelInterface;
+    public function findOneBy(array $criteria): ?ModelInterface;
 }

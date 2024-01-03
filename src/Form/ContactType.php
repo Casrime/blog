@@ -7,7 +7,7 @@ namespace App\Form;
 use Framework\Form\FormType;
 use Framework\Form\Type\EmailType;
 use Framework\Form\Type\TextareaType;
-use Framework\Form\Type\TextType;
+use Framework\Form\Type\InputType;
 use Framework\Validator\Constraints\Email;
 use Framework\Validator\Constraints\Length;
 use Framework\Validator\Constraints\NotBlank;
@@ -17,7 +17,7 @@ final class ContactType extends FormType
     public function buildForm(): void
     {
         $this->fieldCollection
-            ->add('lastname', TextType::class, [
+            ->add('lastname', InputType::class, [
                 'constraints' => [
                     new NotBlank(),
                     new Length(['min' => 3, 'max' => 255]),
@@ -26,7 +26,7 @@ final class ContactType extends FormType
                 'placeholder' => 'Votre nom',
                 'required' => true,
             ])
-            ->add('firstname', TextType::class, [
+            ->add('firstname', InputType::class, [
                 'constraints' => [
                     new NotBlank(),
                     new Length(['min' => 3, 'max' => 255]),

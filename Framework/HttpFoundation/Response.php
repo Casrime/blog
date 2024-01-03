@@ -21,7 +21,6 @@ class Response
     {
         $this->setContent($content);
         $this->setStatusCode($status);
-        // TODO - handle headers
         $this->setHeaders($headers);
     }
 

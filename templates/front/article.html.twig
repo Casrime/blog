@@ -12,11 +12,17 @@
         <p>Créé le : {{ article.createdAt|date('d/m/Y') }} par {{ article.user.email }}</p>
     {% endif %}
 
-    {{ include('_inc/_form.html.twig', {
-        btn_class: 'btn btn-primary',
-        icon: 'fa fa-add',
-        text: 'Ajouter',
-    }) }}
+    {% if 'ROLE_ADMIN' in user.roles %}
+        {{ include('_inc/_form.html.twig', {
+            btn_class: 'btn btn-primary',
+            icon: 'fa fa-add',
+            text: 'Ajouter',
+        }) }}
+    {% else %}
+        <div class="alert alert-info">
+            Vous devez être connecté pour ajouter un commentaire.
+        </div>
+    {% endif %}
 
     <hr class="my-4" />
 

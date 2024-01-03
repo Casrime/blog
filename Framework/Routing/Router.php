@@ -61,7 +61,6 @@ class Router
             $request->query->set($key, $value);
         }
 
-        // TODO - is this really needed ?
         // it just lower case every server key
         foreach ($request->server->all() as $key => $value) {
             $request->server->set(strtolower($key), $value);
@@ -109,5 +108,27 @@ class Router
     public function getRoutes(): RouteCollection
     {
         return $this->routes;
+    }
+
+    public function hasRoute(string $routeName): bool
+    {
+        foreach ($this->routes->all() as $route) {
+            if ($route->getName() === $routeName) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getRoutePathByName(string $routeName): string
+    {
+        foreach ($this->routes->all() as $route) {
+            if ($route->getName() === $routeName) {
+                return $route->getPath();
+            }
+        }
+
+        throw new NotFoundException(sprintf('The route %s does not exist', $routeName));
     }
 }

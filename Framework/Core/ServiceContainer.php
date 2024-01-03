@@ -28,8 +28,8 @@ final class ServiceContainer
     {
         $container = new Container();
 
-        $container->register('form', function () {
-            return new Form();
+        $container->register('form', function () use ($container) {
+            return new Form($container);
         });
 
         $container->register('mailer', function () use ($container) {
@@ -47,8 +47,8 @@ final class ServiceContainer
             return new Router($container);
         });
 
-        $container->register('security', function () {
-            return new Security();
+        $container->register('security', function () use ($container) {
+            return new Security($container);
         });
 
         $container->register('service_repository', function () {
@@ -75,12 +75,11 @@ final class ServiceContainer
             $twig->addFunction((new FormStart())->renderView());
             $twig->addFunction((new FormEnd())->renderView());
             $twig->addFunction((new FormRow())->renderView());
-            // TODO - replace $_SESSION['user']
-            $twig->addGlobal('user', $_SESSION['user'] ?? null);
+            $twig->addGlobal('user', $container->get('session')->get('user') ?? null);
             $twig->addGlobal('flashes', $container->get('session')->getFlashBag());
             $twig->addFilter(new TwigFilter('string', function ($value) {
                 return (string) $value;
-            } ));
+            }));
 
             return $twig;
         });

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Framework\Form;
 
+use Framework\Core\ContainerInterface;
 use Framework\Database\Model\ModelInterface;
 use Framework\Database\ServiceRepository;
 use Framework\Exception\GenericException;
 use Framework\Form\Type\AbstractType;
+use Framework\Form\Type\AbstractTypeInterface;
 use Framework\Form\Type\EntityType;
 use Framework\HttpFoundation\Request;
 
@@ -22,7 +24,7 @@ class Form implements FormInterface
     private ?ModelInterface $model = null;
     private array $errors = [];
 
-    public function __construct()
+    public function __construct(private readonly ContainerInterface $container)
     {
         $this->fieldCollection = new FieldCollection();
     }
@@ -42,9 +44,9 @@ class Form implements FormInterface
                 $this->checkEntityFields($abstractType);
                 /** @var ServiceRepository $classValue */
                 $classValue = $abstractType->getOptions()['repository'];
-                $repository = new $classValue();
+                $repository = new $classValue($this->container->get('security'));
                 $repository->setEntityName($abstractType->getOptions()['entity']);
-                $models = $repository->findAll();
+                $models = $repository->findBy($abstractType->getOptions()['criteria'] ?? []);
                 $abstractType->setValue($models);
             } else {
                 $abstractType->setValue($model->{'get'.ucfirst($abstractType->getName())}());
@@ -138,15 +140,10 @@ class Form implements FormInterface
     public function getData(): array|ModelInterface
     {
         if (null !== $this->model) {
-            // TODO - do we need to clear also in this case ?
-
             return $this->model;
         }
-        // TODO: handle model case.
-        // TODO - replace type by AbstractTypeInterface and check autocompletion still works
-        // TODO - don't forget to add forgotten methods in AbstractTypeInterface
         $data = [];
-        /** @var AbstractType $abstractType */
+        /** @var AbstractTypeInterface $abstractType */
         foreach ($this->fieldCollection->all() as $abstractType) {
             if ('' !== $abstractType->getValue()) {
                 $data[$abstractType->getName()] = $abstractType->getValue();
@@ -180,10 +177,10 @@ class Form implements FormInterface
                     $choiceLabelValue = $abstractType->getOptions()['choice_label'];
                     /** @var ServiceRepository $classValue */
                     $classValue = $abstractType->getOptions()['repository'];
-                    $repository = new $classValue();
+                    $repository = new $classValue($this->container->get('security'));
                     $repository->setEntityName($abstractType->getOptions()['entity']);
                     $model = $repository->findOneBy([
-                        $choiceLabelValue => $abstractType->getValue()
+                        $choiceLabelValue => $abstractType->getValue(),
                     ]);
                     $this->model->{'set'.ucfirst($attributeName)}($model);
                 } else {
@@ -201,13 +198,12 @@ class Form implements FormInterface
                 foreach ($field->getOptions()['constraints'] as $constraint) {
                     if ($constraint->validate($field->getValue())) {
                         $this->errors[$field->getName()] = $constraint->message;
-                        // TODO - move this to a specific method named generateMessageRawError ?
                         // Replace dynamic values in constraint message
                         preg_replace_callback_array(
                             [
                                 '/{{ {1}[a-z]* {1}}}/' => function ($match) use ($constraint) {
                                     return $constraint->message = str_replace($match[0], (string) $constraint->{substr($match[0], 3, -3)}, $constraint->message);
-                                }
+                                },
                             ],
                             $constraint->message
                         );

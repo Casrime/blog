@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace Framework\Security;
 
+use Framework\Core\ContainerInterface;
+
 class Security
 {
+    public function __construct(private readonly ContainerInterface $container)
+    {
+    }
+
     public function hash(string $password): string
     {
         return password_hash($password, PASSWORD_BCRYPT);
@@ -18,14 +24,12 @@ class Security
 
     public function login(UserInterface $user): void
     {
-        // TODO - use Request object or Parameter object to store in Session
-        $_SESSION['user'] = $user;
+        $this->container->get('session')->set('user', $user);
     }
 
     public function logout(): void
     {
-        // TODO - use Request object or Parameter object to store in Session
-        unset($_SESSION['user']);
+        $this->container->get('session')->remove('user');
 
         session_destroy();
     }

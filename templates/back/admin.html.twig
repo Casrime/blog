@@ -3,6 +3,15 @@
 {% block layout %}
     <h1>Administration</h1>
 
+    {{ include('_inc/_link.html.twig', {
+        btn_class: 'btn btn-primary',
+        icon: 'fa fa-add',
+        path: path('new_article'),
+        text: 'Nouvel article'
+    }) }}
+
+    <hr>
+
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="user-tab" data-bs-toggle="tab" data-bs-target="#user-tab-pane" type="button" role="tab" aria-controls="user-tab-pane" aria-selected="true">Utilisateurs</button>
@@ -29,7 +38,7 @@
                                     btn_class: 'btn btn-success',
                                     icon: 'check',
                                     path: path('admin_activate_user', {
-                                        id: user.id | string
+                                        id: user.id|string
                                     }),
                                     text: 'Valider'
                                 }) }}
@@ -60,7 +69,7 @@
                                 btn_class: 'btn btn-success',
                                 icon: 'check',
                                 path: path('admin_activate_comment', {
-                                    id: comment.id | string
+                                    id: comment.id|string
                                 }),
                                 text: 'Valider'
                             }) }}

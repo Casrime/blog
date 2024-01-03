@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Form\Type;
 
-final class TextareaType extends AbstractType
+final class TextareaType extends InputType
 {
     public function generateHtml(): string
     {
@@ -20,16 +20,9 @@ final class TextareaType extends AbstractType
 
     public function getTextarea(): string
     {
-        // TODO - duplicate code here
-        if (0 < count($this->getErrors())) {
-            $class = $this->getClass().' is-invalid';
-        } else {
-            $class = $this->getClass();
-        }
-
         return '
             <textarea
-                class="'.$class.'"
+                class="'.$this->getHTMLClass().'"
                 id="'.$this->getName().'"
                 name="'.$this->getName().'"
                 '.$this->getHelp().'
@@ -37,10 +30,5 @@ final class TextareaType extends AbstractType
                 '.$this->getRequired().'
             >'.$this->getValue().'</textarea>'
         ;
-    }
-
-    private function getClass(): string
-    {
-        return $this->get('class') ?? 'form-control';
     }
 }

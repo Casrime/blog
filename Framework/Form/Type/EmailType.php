@@ -4,47 +4,10 @@ declare(strict_types=1);
 
 namespace Framework\Form\Type;
 
-// TODO - this class is exactly the same as TextType
-// TODO - can we centralize this in AbstractType for getInput and getClass ?
-// TODO - rename getClass in getInputClass ?
-final class EmailType extends AbstractType
+final class EmailType extends InputType
 {
-    public function generateHtml(): string
+    public function getType(): string
     {
-        return
-            $this->generateOpenBlock().
-            $this->getLabel().
-            $this->getInput().
-            $this->getFirstError().
-            $this->getHelpBlock().
-            $this->generateCloseBlock()
-        ;
-    }
-
-    public function getInput(): string
-    {
-        // TODO - duplicate code here
-        if (0 < count($this->getErrors())) {
-            $class = $this->getClass().' is-invalid';
-        } else {
-            $class = $this->getClass();
-        }
-        return '
-            <input
-                type="'.$this->getType().'"
-                class="'.$class.'"
-                id="'.$this->getName().'"
-                name="'.$this->getName().'"
-                value="'.$this->getValue().'"
-                '.$this->getHelp().'
-                '.$this->getPlaceholder().'
-                '.$this->getRequired().'
-            >'
-        ;
-    }
-
-    private function getClass(): string
-    {
-        return $this->get('class') ?? 'form-control';
+        return 'email';
     }
 }

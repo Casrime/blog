@@ -18,6 +18,6 @@ $routeCollection->add(new Route('/admin/activate-user/{id}', 'admin_activate_use
 $routeCollection->add(new Route('/admin/activate-comment/{id}', 'admin_activate_comment', [AdminController::class, 'adminActivateComment'], ['GET'], [], 'ROLE_ADMIN'));
 $routeCollection->add(new Route('/user/article/new', 'new_article', [UserController::class, 'newArticle'], ['GET', 'POST'], [], 'ROLE_USER'));
 $routeCollection->add(new Route('/user/article/edit/{slug}', 'edit_article', [UserController::class, 'editArticle'], ['GET', 'POST'], [], 'ROLE_USER'));
-$routeCollection->add(new Route('/user/article/delete/{slug}', 'delete_article', [UserController::class, 'deleteArticle'], ['GET', 'DELETE'], [], 'ROLE_USER'));
+$routeCollection->add(new Route('/user/article/delete/{slug}', 'delete_article', [UserController::class, 'deleteArticle'], ['POST'], [], 'ROLE_USER'));
 
 return $routeCollection;

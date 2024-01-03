@@ -8,5 +8,7 @@ interface AbstractTypeInterface
 {
     public function getName(): string;
 
+    public function getValue(): mixed;
+
     public function setValue(?string $value): void;
 }

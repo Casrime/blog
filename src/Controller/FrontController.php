@@ -61,7 +61,6 @@ final class FrontController extends AbstractController
 
     public function article(Request $request): Response
     {
-        // TODO - use the slug, check the value is correct first
         $slug = $request->query->get('slug');
 
         /** @var Article $article */
@@ -100,7 +99,7 @@ final class FrontController extends AbstractController
 
     public function register(Request $request): Response
     {
-        $form = $this->createForm(new RegisterType(), new User());
+        $form = $this->createForm(new RegisterType($this->getContainer()->get('security')), new User());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -132,7 +131,7 @@ final class FrontController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
-            $userRepository = new UserRepository();
+            $userRepository = new UserRepository($this->getContainer()->get('security'));
 
             $existingUser = $userRepository->login($user);
 
@@ -141,7 +140,6 @@ final class FrontController extends AbstractController
 
                 return $this->redirectToRoute('login');
             }
-            // TODO - login the user
             /** @var Security $security */
             $security = $this->getContainer()->get('security');
             $security->login($existingUser);
@@ -156,7 +154,6 @@ final class FrontController extends AbstractController
         ]);
     }
 
-    // TODO - add logout
     public function logout(Request $request): Response
     {
         /** @var Security $security */

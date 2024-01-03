@@ -5,20 +5,17 @@ declare(strict_types=1);
 namespace Framework\Database;
 
 use Framework\Database\Model\ModelInterface;
-use PDO;
-use PDOStatement;
-use ReflectionClass;
 
 class ServiceRepository extends Database implements ServiceRepositoryInterface
 {
-    private PDOStatement|false $query;
+    private \PDOStatement|false $query;
     private string $getterRelation;
 
     private function buildObject(array $data): object
     {
         $entityName = $this->getEntityName();
-        $reflection = new ReflectionClass($this->getEntityName());
-        $entity = new $entityName;
+        $reflection = new \ReflectionClass($this->getEntityName());
+        $entity = new $entityName();
 
         foreach ($reflection->getProperties() as $property) {
             $propertyName = $property->getName();
@@ -36,15 +33,15 @@ class ServiceRepository extends Database implements ServiceRepositoryInterface
                 }
             }
         }
-        $matches  = preg_grep("/[a-z]*_/", array_keys($data));
+        $matches = preg_grep('/[a-z]*_/', array_keys($data));
         if (0 < count($matches)) {
             $foreignKey = reset($matches);
             $relationName = substr($foreignKey, 0, -3);
-            $relatioNameWithFQCN = preg_replace('/\\\\([A-Za-z]+)$/', '\\' . ucfirst($relationName), $entityName);
-            $relatedEntity = new $relatioNameWithFQCN;
+            $relatioNameWithFQCN = preg_replace('/\\\\([A-Za-z]+)$/', '\\'.ucfirst($relationName), $entityName);
+            $relatedEntity = new $relatioNameWithFQCN();
             $relatedEntity->setId($data[$foreignKey]);
-            $entity->{'set' . ucfirst($relationName)}($relatedEntity);
-            $this->getterRelation = 'get' . ucfirst($relationName);
+            $entity->{'set'.ucfirst($relationName)}($relatedEntity);
+            $this->getterRelation = 'get'.ucfirst($relationName);
         }
 
         return $entity;
@@ -57,20 +54,19 @@ class ServiceRepository extends Database implements ServiceRepositoryInterface
 
     public function find(int $id): ?ModelInterface
     {
-        $tableName = (new ReflectionClass($this->getEntityName()))->getShortName();
+        $tableName = (new \ReflectionClass($this->getEntityName()))->getShortName();
         $query = $this->getConnection()->prepare('SELECT * FROM '.$tableName.' WHERE id = :id');
         $query->execute(['id' => $id]);
-        $result = $query->fetch(PDO::FETCH_ASSOC);
+        $result = $query->fetch(\PDO::FETCH_ASSOC);
         $entity = $this->buildEntity($result);
         $query->closeCursor();
 
         return $entity;
     }
 
-    // TODO - handle parameters
-    public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null): array
+    public function findBy(array $criteria): array
     {
-        $tableName = (new ReflectionClass($this->getEntityName()))->getShortName();
+        $tableName = (new \ReflectionClass($this->getEntityName()))->getShortName();
         if (empty($criteria)) {
             $query = $this->getConnection()->prepare('SELECT * FROM '.$tableName);
             $query->execute([]);
@@ -78,22 +74,22 @@ class ServiceRepository extends Database implements ServiceRepositoryInterface
             $criteriaString = '';
             $keyNumber = 1;
             foreach ($criteria as $key => $value) {
-                if ($keyNumber === 1) {
+                if (1 === $keyNumber) {
                     $criteriaString .= 'WHERE '.$key.' = :'.$key;
-                    $keyNumber++;
+                    ++$keyNumber;
                 } elseif ($keyNumber === count($criteria)) {
                     $criteriaString .= ' AND '.$key.' = :'.$key;
                 } else {
                     $criteriaString .= ' AND '.$key.' = :'.$key;
-                    $keyNumber++;
+                    ++$keyNumber;
                 }
             }
             $query = $this->getConnection()->prepare('SELECT * FROM '.$tableName.' '.$criteriaString);
             $query->execute($criteria);
         }
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        $result = $query->fetchAll(\PDO::FETCH_ASSOC);
         $entities = [];
-        foreach ($result as $entry){
+        foreach ($result as $entry) {
             $entities[] = $this->buildObject($entry);
         }
         $query->closeCursor();
@@ -101,8 +97,7 @@ class ServiceRepository extends Database implements ServiceRepositoryInterface
         return $entities;
     }
 
-    // TODO - handle parameters
-    public function findOneBy(array $criteria, ?array $orderBy = []): ?ModelInterface
+    public function findOneBy(array $criteria): ?ModelInterface
     {
         $result = $this->fetch($criteria);
         if (false === $result) {
@@ -118,7 +113,7 @@ class ServiceRepository extends Database implements ServiceRepositoryInterface
 
     private function handleRelations(ModelInterface $model): ModelInterface
     {
-        $reflection = new ReflectionClass($model);
+        $reflection = new \ReflectionClass($model);
         foreach ($reflection->getProperties() as $property) {
             if (class_exists($property->getType()->getName()) && new ($property->getType()->getName()) instanceof ModelInterface) {
                 $this->setEntityName($property->getType()->getName());
@@ -126,19 +121,16 @@ class ServiceRepository extends Database implements ServiceRepositoryInterface
                 $result = $this->fetch($criteria);
                 if (false !== $result) {
                     $associatedEntity = $this->buildObject($result);
-                    $model->{'set' . ucwords($property->getName())}($associatedEntity);
+                    $model->{'set'.ucwords($property->getName())}($associatedEntity);
                 }
-                // TODO - change 'Framework\Database\CollectionInterface' ?
-            } elseif (interface_exists($property->getType()->getName()) && $property->getType()->getName() === 'Framework\Database\CollectionInterface') {
-                // TODO - handle array of ModelInterface relation
+            } elseif (interface_exists($property->getType()->getName()) && 'Framework\Database\CollectionInterface' === $property->getType()->getName()) {
                 $modelInterfaceName = substr(ucfirst($property->getName()), 0, -1);
                 $entityName = str_replace($reflection->getShortName(), $modelInterfaceName, $property->class);
                 $this->setEntityName($entityName);
-                // TODO - is it the same here ? Do we need to replace $model->getId() by $model->{$this->getterRelation}()->getId() ?
                 $criteria = [lcfirst($reflection->getShortName()).'_id' => $model->getId()];
                 $result = $this->fetchAll($criteria);
-                foreach ($result as $entry){
-                    $model->{'add' . $modelInterfaceName}($this->buildObject($entry));
+                foreach ($result as $entry) {
+                    $model->{'add'.$modelInterfaceName}($this->buildObject($entry));
                 }
             }
         }
@@ -148,17 +140,19 @@ class ServiceRepository extends Database implements ServiceRepositoryInterface
 
     private function fetch(array $criteria): mixed
     {
-        $tableName = (new ReflectionClass($this->getEntityName()))->getShortName();
+        $tableName = (new \ReflectionClass($this->getEntityName()))->getShortName();
         $this->query = $this->getConnection()->prepare('SELECT * FROM '.$tableName.' WHERE '.array_keys($criteria)[0].' = :'.array_keys($criteria)[0]);
         $this->query->execute($criteria);
-        return $this->query->fetch(PDO::FETCH_ASSOC);
+
+        return $this->query->fetch(\PDO::FETCH_ASSOC);
     }
 
     private function fetchAll(array $criteria): array
     {
-        $tableName = (new ReflectionClass($this->getEntityName()))->getShortName();
+        $tableName = (new \ReflectionClass($this->getEntityName()))->getShortName();
         $this->query = $this->getConnection()->prepare('SELECT * FROM '.$tableName.' WHERE '.array_keys($criteria)[0].' = :'.array_keys($criteria)[0]);
         $this->query->execute($criteria);
-        return $this->query->fetchAll(PDO::FETCH_ASSOC);
+
+        return $this->query->fetchAll(\PDO::FETCH_ASSOC);
     }
 }
