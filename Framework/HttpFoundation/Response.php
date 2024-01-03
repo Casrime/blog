@@ -26,7 +26,6 @@ class Response
 
     public function send(): void
     {
-        // $this->getHeaders();
         $this->sendContent();
     }
 
