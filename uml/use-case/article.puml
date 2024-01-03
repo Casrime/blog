@@ -1,0 +1,32 @@
+@startuml
+left to right direction
+actor Visitor as visitor #limegreen;line:limegreen;line.bold;text:black
+actor User as user #dodgerblue;line:dodgerblue;line.bold;text:black
+actor Admin as admin #crimson;line:crimson;line.bold;text:black
+
+package Article #limegreen;line:limegreen;line.bold;text:white {
+  usecase "Show articles" as showArticles
+  usecase "Show article" as showArticle
+
+  usecase "Create article" as createArticle
+  usecase "Update his own articles" as updateOwnArticle
+  usecase "Delete his own articles" as deleteOwnArticle
+
+  usecase "Update all articles" as updateAllArticle
+  usecase "Delete all articles" as deleteAllArticle
+}
+
+visitor --> showArticles
+visitor --> showArticle
+
+user --> visitor
+
+user --> createArticle
+user --> updateOwnArticle
+user --> deleteOwnArticle
+
+admin --> user
+
+admin --> updateAllArticle
+admin --> deleteAllArticle
+@enduml

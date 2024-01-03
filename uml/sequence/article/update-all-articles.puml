@@ -1,0 +1,26 @@
+@startuml
+autonumber
+title       Admin wants to update an article
+actor       Admin
+participant Application
+database    Database
+
+ref over Admin, Application, Database: Login
+ref over Admin, Application, Database: Show articles
+
+Admin -> Application: GET /user/article/edit/:slug
+Application -> Database: get article by slug
+Database -> Application: return article
+Application -> Admin: Render /user/article/edit
+Admin -> Application: POST /user/article/edit/:slug
+Application -> Application: check values
+alt values are valid
+    Application -> Database: update article
+    Database -> Application: return updated article
+    Application -> Admin: Redirect to /article/:slug
+else values are not valid
+    Application -> Application: Add error messages
+    Application -> Admin: Render /user/article/edit/:slug
+end
+
+@enduml

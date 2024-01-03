@@ -1,0 +1,25 @@
+@startuml
+left to right direction
+actor Visitor as visitor #limegreen;line:limegreen;line.bold;text:black
+actor User as user #dodgerblue;line:dodgerblue;line.bold;text:black
+actor Admin as admin #crimson;line:crimson;line.bold;text:black
+
+package Comment #dodgerblue;line:dodgerblue;line.bold;text:white {
+  usecase "Show comments" as showComments
+
+  usecase "Add comment" as addComment
+
+  usecase "Validate comment" as validateComment
+}
+
+visitor --> showComments
+
+user --> visitor
+
+user --> addComment
+
+admin --> user
+
+admin --> validateComment
+@enduml
+

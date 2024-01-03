@@ -1,0 +1,21 @@
+@startuml
+autonumber
+title       "Visitor" wants to show an article
+actor       "Visitor"
+participant Application
+database    Database
+
+ref over Visitor, Application, Database: Show articles
+
+"Visitor" -> Application: GET /article/:id
+Application -> Database: get article
+Database -> Database: checks article exists
+
+alt article exists
+    Database -> Application: return article
+    Application -> "Visitor": render /article
+else authentication error
+    Database -> Application: return error
+    Application -> "Visitor": render error
+end
+@enduml

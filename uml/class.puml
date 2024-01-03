@@ -1,0 +1,93 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Article {
+   -id
+   -title
+   -slug
+   -chapo
+   -user
+   -content
+   -createdAt
+   -updatedAt
+   -comments
+   +getId()
+   +setId()
+   +getTitle()
+   +setTitle()
+   +getSlug()
+   +setSlug()
+   +getChapo()
+   +setChapo()
+   +getUser()
+   +setUser()
+   +getContent()
+   +setContent()
+   +getCreatedAt()
+   +setCreatedAt()
+   +getUpdatedAt()
+   +setUpdatedAt()
+   +getComments()
+   +addComment()
+   +removeComment()
+}
+
+class Comment {
+   -id
+   -comment
+   -article
+   -active
+   +getId()
+   +setId()
+   +getComment()
+   +setComment()
+   +getArticle()
+   +setArticle()
+   +getActive()
+   +setActive()
+}
+
+class User {
+   -id
+   -email
+   -username
+   -password
+   -tasks
+   -roles
+   +getId()
+   +getUsername()
+   +setUsername()
+   +getEmail()
+   +setEmail()
+   +getUserIdentifier()
+   +getPassword()
+   +setPassword()
+   +getTasks()
+   +addTask()
+   +removeTask()
+   +getRoles()
+   +setRoles()
+   +getSalt()
+   +eraseCredentials()
+}
+
+class Contact {
+   -lastname
+   -firstname
+   -email
+   -message
+   +getId()
+   +getLastname()
+   +setLastname()
+   +getFirstname()
+   +setFirstname()
+   +getEmail()
+   +setEmail()
+   +getMessage()
+   +setMessage()
+}
+
+Article -{ Comment
+User -{ Article
+
+@enduml

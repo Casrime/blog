@@ -1,0 +1,24 @@
+@startuml
+left to right direction
+actor Visitor as visitor #limegreen;line:limegreen;line.bold;text:black
+actor User as user #dodgerblue;line:dodgerblue;line.bold;text:black
+actor Admin as admin #crimson;line:crimson;line.bold;text:black
+
+package User #crimson;line:crimson;line.bold;text:white {
+  usecase "Register" as register
+
+  usecase "Login" as login
+
+  usecase "Validate user" as validateUser
+}
+
+visitor --> register
+
+user --> visitor
+
+user --> login
+
+admin --> user
+
+admin --> validateUser
+@enduml
